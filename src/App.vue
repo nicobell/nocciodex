@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper" @mousemove="makePreview">
 
-    <div :class="['cards']">
-      <div class="card" v-for="c, i in cards">
+    <div :class="['cards']" :style="'grid-template-columns: '+ computedcolumns +';'">
+      <div class="card" v-for="(c, i) in cards">
         <img v-if="c==''" src="./assets/back.png" alt="" class="empty">
         <div v-if="c.length>=2 && c.length<=4" class="multiple" @click="fixAlt">
           <img class="maincard" :src="c[0]" alt="">
@@ -21,6 +21,7 @@
     </div>
 
     <div class="generation">
+      <!-- 
       <button :class="{active: gen==0}" @click="changeGen(0)">Starters</button>
       <button :class="{active: gen==1}" @click="changeGen(1)">1st gen</button>
       <button :class="{active: gen==2}" @click="changeGen(2)">2nd gen</button>
@@ -30,7 +31,41 @@
       <button :class="{active: gen==6}" @click="changeGen(6)">6th gen</button>
       <button :class="{active: gen==7}" @click="changeGen(7)">7th gen</button>
       <button :class="{active: gen==8}" @click="changeGen(8)">8th gen</button>
-      <button :class="{active: gen==9}" @click="changeGen(9)">9th gen</button>
+      <button :class="{active: gen==9}" @click="changeGen(9)">9th gen</button> 
+      -->
+
+      <div class="field">
+        <label for="generation">Generation</label>
+      <select v-model="gen" name="genselect" id="genselect">
+        <option value="1">Gen 1</option>
+        <option value="2">Gen 2</option>
+        <option value="3">Gen 3</option>
+        <option value="4">Gen 4</option>
+        <option value="5">Gen 5</option>
+        <option value="6">Gen 6</option>
+        <option value="7">Gen 7</option>
+        <option value="8">Gen 8</option>
+        <option value="9">Gen 9</option>
+        <option value="0">Starters</option>
+      </select>
+    </div>
+
+      <div class="checkbox">
+        <label for="fill">Fill pockets</label>
+        <input type="checkbox" v-model="fill" id="fill" name="fill">
+      </div>
+      
+      <div class="field">
+        <label for="ncolumns">Columns</label>
+        <input name="ncolumns" type="number" v-model="ncolumns">
+      </div>
+
+      <div class="field">
+        <label for="ncolumns">Cards per page</label>
+        <span style="color: #fff;">{{ pagesize }}</span>
+      </div>
+      <!-- <input disabled name="ncolumns" type="number" v-model="pagesize"> -->
+
     </div>
 
     <div class="preview">
@@ -42,25 +77,46 @@
 
 <script setup>
 import { useCardsStore } from '@/stores/cards'
-import { ref, onMounted, computed, useTemplateRef, getCurrentInstance } from 'vue'
+import { ref, onMounted, computed, useTemplateRef, getCurrentInstance, watch } from 'vue'
 
 const store = useCardsStore()
 const gen = ref(1)
 const page = ref(0)
-let pagesize = 9
-/* get all cards from current generation + filter 9 per page */
-const cards = computed(() => {
-  return store.cards[gen.value].slice(page.value * pagesize, page.value * pagesize + pagesize)
+const fill = ref(false)
+const ncolumns = ref(3)
+//const pagesize = ref(9)
+const pagesize = computed(() => {
+  return ncolumns.value  * 3
 })
+
+/* get all cards from current generation + filter 9 per page */
+const storecards = computed(() => {
+  if(fill.value)
+    return store.cards[gen.value].filter(c => c!="")
+  else
+    return store.cards[gen.value]
+})
+
+const cards = computed(() => {
+  return storecards.value.slice(page.value * pagesize.value, page.value * pagesize.value + pagesize.value)
+})
+
 /* preview card element */
 const previewRef = useTemplateRef('preview')
 
 /* select pokemon generation */
-const changeGen = (g) => {
+/* const changeGen = (g) => {
   gen.value = g
   localStorage.setItem('currentGen', gen.value)
   swipePage('first')
-}
+} */
+
+const computedcolumns = computed(() => {
+  let s = ''
+  for(let i=0; i<ncolumns.value; i++)
+    s += ' 1fr'
+  return s
+})
 
 /* swipe page on same generation */
 const swipePage = async (dir) => {
@@ -75,7 +131,7 @@ const swipePage = async (dir) => {
       page.value = 0;
       break;
     case 'last':
-      page.value = Math.floor(store.cards[gen.value].length/pagesize)-1;
+      page.value = Math.floor(storecards.value.length/pagesize.value)-1;
       break;
   }
   localStorage.setItem('currentPage', page.value)
@@ -104,6 +160,7 @@ onMounted(() => {
   if(localStorage.getItem('currentGen'))
     gen.value = localStorage.getItem('currentGen')
 })
+
 </script>
 
 <style scoped lang="scss">
@@ -134,7 +191,7 @@ onMounted(() => {
 
 .cards {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr; */
   grid-template-rows: 1fr 1fr 1fr;
   height: 93vh;
   width: fit-content;
@@ -219,11 +276,19 @@ onMounted(() => {
   transition: all 300ms ease;
   pointer-events: none;
 }
-.cards .card .multiple:hover .altcard,
+
 .cards .card .multiple .altcard.fixed {
   z-index: 1;
   translate: 0 0;
   transition: all 300ms ease;
+}
+
+@media (min-width: 768px) {
+  .cards .card .multiple:hover .altcard {
+    z-index: 1;
+    translate: 0 0;
+    transition: all 300ms ease;
+  }
 }
 
 .cards .card .multiple .altcard.fixed {
@@ -264,7 +329,7 @@ onMounted(() => {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
 
   .cards  {
     margin: 0;
@@ -298,21 +363,64 @@ onMounted(() => {
     gap: 1rem;
     button {
       padding: .5rem 1rem;
+      border-radius: 3rem;
+      border: none;
     }
   }
+
+  
 
   .generation {
     bottom: .5rem;
     top: unset;
     left: 0;
-    gap: 0;
     flex-direction: row;
+    align-items: center;
     width: 100vw;
-    button {
-      padding: .5rem;
-      font-size: .5rem;
+    gap: .5rem;
+    padding: 0 .5rem;
+    /* background-color: blue; */
 
+    /* button {
+      padding: .5rem;
+      font-size: .7rem;
+      border-radius: 2rem;
+    } */
+
+    > * {
+      display: block;
+      width: 25%;
+      /* background-color: red; */
     }
+
+    input, select {
+      background-color: #666;
+      border: none;
+      line-height: 1em;
+      padding: .25rem .5rem;
+      color: #fff;
+      height: fit-content;
+      border-radius: 3rem;
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    label {
+      font-size: .7rem;
+    }
+  }
+
+  .checkbox {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    align-items: center;
+    font-size: .7rem;
+    line-height: 1em;
   }
 
   .preview {
