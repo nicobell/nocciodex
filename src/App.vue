@@ -106,7 +106,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #app {
   background-color: #333;
 }
@@ -261,6 +261,63 @@ onMounted(() => {
 }
 .generation button.active {
   background: #666;
+}
+
+
+@media (max-width: 768px) {
+
+  .cards  {
+    margin: 0;
+    /* background-color: blue; */
+    height: 80svh;
+    width: 100vw;
+    padding: .5rem;
+    gap: .5rem;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+
+    .card {
+      /* background-color: red; */
+      height: calc((80svh - 2rem) / 3);
+      width: 100%;
+      display: block;
+      position: relative;
+    }
+
+    img {
+      object-fit: contain;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+
+  .buttons {
+    position: absolute;
+    bottom: 3.5rem;
+    gap: 1rem;
+    button {
+      padding: .5rem 1rem;
+    }
+  }
+
+  .generation {
+    bottom: .5rem;
+    top: unset;
+    left: 0;
+    gap: 0;
+    flex-direction: row;
+    width: 100vw;
+    button {
+      padding: .5rem;
+      font-size: .5rem;
+
+    }
+  }
+
+  .preview {
+    display: none;
+  }
 }
 
 </style>

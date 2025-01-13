@@ -683,7 +683,7 @@ export const useCardsStore = defineStore('cards', () => {
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_117_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/RCL/RCL_079_R_EN_LG.png",
       //remoraid
-      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CIN/CIN_022_R_EN_SM.png", "https://images.pokemontcg.io/dp2/95.png"],
+      ["https://images.pokemontcg.io/dp2/95.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CIN/CIN_022_R_EN_SM.png"],
       ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BST/BST_037_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CIN/CIN_023_R_EN_LG.png"],
       "",
       //delibird
