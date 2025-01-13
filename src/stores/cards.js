@@ -579,7 +579,7 @@ export const useCardsStore = defineStore('cards', () => {
       ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOT/LOT_136_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAL/PAL_045_R_EN_LG.png"],
       //bonsly
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_110_R_EN_LG.png",
-      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_094_R_EN_LG.png", "https://images.pokemontcg.io/dp5/48_hires.png"],
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/GRI/GRI_066_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SSH/SSH_100_R_EN_LG.png"],
       "",
       //politoed
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/UL/UL_058_R_EN_LG.png",
@@ -746,16 +746,16 @@ export const useCardsStore = defineStore('cards', () => {
       ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_064_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CES/CES_035_R_EN_LG.png"],
       //poochyena
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/VIV/VIV_103_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PHF/PHF_054_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/KSS/KSS_017_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PHF/PHF_054_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/KSS/KSS_017_R_EN_LG.png"],
+      "",
       //zigzagoon
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_111_R_EN_LG.png",
-      "https://images.pokemontcg.io/dp4/43_hires.png",
+      ["https://images.pokemontcg.io/dp4/43.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_112_R_EN_LG.png"],
       "",
-      //galarian zigzagoon
+      //* galarian zigzagoon
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_159_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_160_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_161_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_161_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CPA/CPA_037_R_EN_LG.png"],
       //wurmple silcoon
       "https://images.pokemontcg.io/ex8/82_hires.png",
       "https://images.pokemontcg.io/ex8/46_hires.png",
@@ -763,39 +763,39 @@ export const useCardsStore = defineStore('cards', () => {
       //wurmple cascoon
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ROS/ROS_003_R_EN_LG.png",
       "https://images.pokemontcg.io/ex1/26_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_010_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/DRX/DRX_047_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_010_R_EN_LG.png"],
       //lotad
       "https://images.pokemontcg.io/dp3/92_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PLS/PLS_030_R_EN_LG.png",
-      "https://images.pokemontcg.io/ex8/19_hires.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PLS/PLS_030_R_EN_LG.png", "https://images.pokemontcg.io/dp3/54_hires.png"],
+      ["https://images.pokemontcg.io/pl1/34_hires.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PLS/PLS_031_R_EN_LG.png"],
       //seedot
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/NXD/NXD_002_R_EN_LG.png",
       ["https://images.pokemontcg.io/dp1/57_hires.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_012_R_EN_LG.png"],
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_005_R_EN_LG.png",
       //taillow
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ROS/ROS_070_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/XY/XY_103_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/VIV/VIV_134_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/VIV/VIV_134_R_EN_LG.png", "https://images.pokemontcg.io/ex8/49_hires.png"],
+      "",
       //wingull
-      "https://images.pokemontcg.io/pl4/81_hires.png",
-      "https://images.pokemontcg.io/pl4/45_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAL/PAL_159_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ROS/ROS_018_R_EN_LG.png", "https://images.pokemontcg.io/pl4/81_hires.png"],
+      ["https://images.pokemontcg.io/pl4/45_hires.png", "https://images.pokemontcg.io/ex8/21_hires.png"],
+      "",
       //gardevoir
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRE/CRE_059_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_068_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRE/CRE_061_R_EN_LG.png",
       //gallade
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_027_R_EN_LG.png",
+      /* "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_027_R_EN_LG.png",
       "https://images.pokemontcg.io/pl1/51_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRE/CRE_081_R_EN_LG.png",
+      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRE/CRE_081_R_EN_LG.png", */
       //surskit
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAR/PAR_001_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SUM/SUM_008_R_EN_LG.png",
       "",
       //shroomish
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_006_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_004_R_EN_LG.png",
-      "https://images.pokemontcg.io/ex9/22_hires.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_004_R_EN_LG.png", "https://images.pokemontcg.io/ex9/22_hires.png"],
+      "",
       //slakoth
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SSP/SSP_145_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAL/PAL_161_R_EN_LG.png",
@@ -807,139 +807,155 @@ export const useCardsStore = defineStore('cards', () => {
       //whismur
       "https://images.pokemontcg.io/dp4/94_hires.png",
       "https://images.pokemontcg.io/ex9/35_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAR/PAR_150_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAR/PAR_150_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CES/CES_119_R_EN_LG.png"],
       //makuhita
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FFI/FFI_051_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAL/PAL_113_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_143_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SUM/SUM_068_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAL/PAL_113_R_EN_LG.png"],
+      "",
       //nosepass
       ["https://images.pokemontcg.io/pl4/69_hires.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/GRI/GRI_069_R_EN_LG.png"],
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_095_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_146_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_095_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_146_R_EN_LG.png"],
+      "",
       //skitty
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_130_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_131_R_EN_LG.png",
       "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CES/CES_121_R_EN_LG.png",
       //sableye
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_070_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_107_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EVS/EVS_067_R_EN_LG.png",
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_070_R_EN_LG.png",
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EVS/EVS_067_R_EN_LG.png",
       //mawile
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CIN/CIN_064_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BST/BST_100_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_112_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_112_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CES/CES_091_R_EN_LG.png"],
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CIN/CIN_064_R_EN_LG.png",
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_143_R_EN_LG.png",
       //aron
       "https://images.pokemontcg.io/pl2/57_hires.png",
-      ["https://images.pokemontcg.io/ex14/36_hires.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TM/TM_037_R_EN_LG.png"],
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TM/TM_037_R_EN_LG.png", ""],
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/DAA/DAA_123_R_EN_LG.png",
       //meditite
       "https://images.pokemontcg.io/dp1/89_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_100_R_EN_LG.png",
-      "https://images.pokemontcg.io/pl3/34_hires.png",
+      ["https://images.pokemontcg.io/pl3/34_hires.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_100_R_EN_LG.png"],
+      "",
       //electrike
-      "https://images.pokemontcg.io/ex8/59_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ROS/ROS_025_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_055_R_EN_LG.png",
+      ["https://images.pokemontcg.io/ex8/59_hires.png", "https://images.pokemontcg.io/ex9/47.png"],
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_055_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ROS/ROS_025_R_EN_LG.png"],
+      "",
       //plulse minun
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAR/PAR_060_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SLG/SLG_033_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAR/PAR_061_R_EN_LG.png",
+      "",
       //volbeat illumise
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TWM/TWM_009_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TWM/TWM_010_R_EN_LG.png",
       "",
+      //budew
+      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_1_R_JP_LG.png",
+      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SSH/SSH_003_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_009_R_EN_LG.png", "https://images.pokemontcg.io/dp7/23.png"],
       //gulpin
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PHF/PHF_037_R_EN_LG.png",
-      "https://images.pokemontcg.io/dp6/72_hires.png",
+      ["https://images.pokemontcg.io/dp6/72_hires.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PHF/PHF_038_R_EN_LG.png"],
       "",
       //carvanha
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CEC/CEC_132_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EVS/EVS_036_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_163_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_163_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EVS/EVS_036_R_EN_LG.png"],
+      "",
       //wailmer
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRZ/CRZ_031_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/VIV/VIV_032_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRZ/CRZ_032_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/VIV/VIV_032_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRZ/CRZ_032_R_EN_LG.png"],
+      "",
       //numel
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_031_R_EN_LG.png",
-      "https://images.pokemontcg.io/ex9/23_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_032_R_EN_LG.png",
+      ["https://images.pokemontcg.io/ex9/23_hires.png", "https://images.pokemontcg.io/dp6/47.png"],
+      "",
       //torkoal
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_023_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_023_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SLG/SLG_011_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_023_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_023_R_EN_LG.png"],
+      "",
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SLG/SLG_011_R_EN_LG.png",
       //spoink
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_090_R_EN_LG.png",
-      "https://images.pokemontcg.io/dp6/56_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_091_R_EN_LG.png",
-      //spinda kecleon tropius
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_091_R_EN_LG.png", "https://images.pokemontcg.io/dp6/56_hires.png"],
+      "",
+      //spinda
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAR/PAR_151_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PLF/PLF_094_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAL/PAL_007_R_EN_LG.png",
+      "", 
+      "",
       //trapinch
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_074_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SSP/SSP_105_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_075_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CEC/CEC_109_R_EN_LG.png"],
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/DAA/DAA_091_R_EN_LG.png",
       //cacnea
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BST/BST_004_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CIN/CIN_006_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_006_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CIN/CIN_006_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_006_R_EN_LG.png"],
+      "",
       //swablu
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_169_R_EN_LG.png",
-      "https://images.pokemontcg.io/pl1/18_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SSP/SSP_134_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SSP/SSP_134_R_EN_LG.png", "https://images.pokemontcg.io/pl1/18_hires.png"],
+      "",
       //zangoose
-      "https://images.pokemontcg.io/ex9/21_hires.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_146_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRE/CRE_120_R_EN_LG.png",
+      "", //"https://images.pokemontcg.io/ex9/21_hires.png",
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRE/CRE_120_R_EN_LG.png",
       //seviper
-      "https://images.pokemontcg.io/dp4/52_hires.png",
       "https://images.pokemontcg.io/ex9/20_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_128_R_EN_LG.png",
+      "", //"https://images.pokemontcg.io/dp4/52_hires.png",
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_128_R_EN_LG.png",
       //Lunatone solrock
       "https://images.pokemontcg.io/pl3/32_hires.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_083_R_EN_LG.png",
       "",
       //barboach
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/OBF/OBF_108_R_EN_LG.png",
-      "https://images.pokemontcg.io/pl2/54_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_040_R_EN_LG.png",
+      ["https://images.pokemontcg.io/pl2/54_hires.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_040_R_EN_LG.png"],
+      "",
       //corphish
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_032_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TWM/TWM_048_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_092_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_092_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TWM/TWM_048_R_EN_LG.png"],
+      "",
       //baltoy
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SSH/SSH_101_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_094_R_EN_LG.png",
-      "https://images.pokemontcg.io/pl3/22_hires.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_094_R_EN_LG.png", "https://images.pokemontcg.io/pl3/22_hires.png"],
+      "",
       //lileep
       "https://images.pokemontcg.io/dp6/105_hires.png",
-      "https://images.pokemontcg.io/dp6/21_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CEC/CEC_011_R_EN_LG.png",
+      ["https://images.pokemontcg.io/dp6/21_hires.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CEC/CEC_011_R_EN_LG.png"],
+      "",
       //anorith
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/STS/STS_056_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/STS/STS_057_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_096_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_096_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/STS/STS_057_R_EN_LG.png"],
+      "",
       //feebas
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EVS/EVS_037_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_040_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/DAA/DAA_039_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/DAA/DAA_039_R_EN_LG.png", "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_040_R_EN_LG.png"],
+      "",
+      //castform
+      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_116_R_EN_LG.png",
+      "",
+      "",
+      //kecleon
+      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PLF/PLF_094_R_EN_LG.png",
+      "",
+      "",
       //shuppet
       "https://images.pokemontcg.io/dp3/110_hires.png",
-      "https://images.pokemontcg.io/dp3/23_hires.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/VIV/VIV_068_R_EN_LG.png",
+      ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/VIV/VIV_068_R_EN_LG.png", "https://images.pokemontcg.io/dp3/23.png"],
+      "",
       //duskull
       "https://images.pokemontcg.io/ex8/58_hires.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRZ/CRZ_063_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_020_R_EN_LG.png",
+      //tropius
+      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAL/PAL_007_R_EN_LG.png",
+      "",
+      "",
       //chingling
       "https://images.pokemontcg.io/dp2/42_hires.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TWM/TWM_085_R_EN_LG.png",
       "",
       //absol
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAR/PAR_113_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_164_R_EN_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CPA/CPA_038_R_EN_LG.png",
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAR/PAR_113_R_EN_LG.png",
+      "", //"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CPA/CPA_038_R_EN_LG.png",
       //snorunt
       "https://images.pokemontcg.io/ex5/73_hires.png",
       "https://images.pokemontcg.io/pl4/18_hires.png",
@@ -952,6 +968,14 @@ export const useCardsStore = defineStore('cards', () => {
       "https://images.pokemontcg.io/ex5/58_hires.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/FST/FST_067_R_EN_LG.png",
       "https://images.pokemontcg.io/ex5/19_hires.png",
+      //relicanth
+      "https://images.pokemontcg.io/pl3/79_hires.png",
+      "",
+      "",
+      //luvdisc
+      "https://images.pokemontcg.io/ex9/53_hires.png",
+      "",
+      "",
       //bagon
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CES/CES_104_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EVS/EVS_108_R_EN_LG.png",
@@ -960,10 +984,10 @@ export const useCardsStore = defineStore('cards', () => {
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CES/CES_092_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVP/SVP_090_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/TEF/TEF_115_R_EN_LG.png",
-      //castform relicanth luvdisc
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BRS/BRS_116_R_EN_LG.png",
-      "https://images.pokemontcg.io/pl3/79_hires.png",
-      "https://images.pokemontcg.io/ex9/53_hires.png",
+      
+      "",
+      "",
+      "",
       //regi
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/VIV/VIV_089_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CIN/CIN_028_R_EN_LG.png",
@@ -1018,10 +1042,6 @@ export const useCardsStore = defineStore('cards', () => {
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRZ/CRZ_040_R_EN_LG.png",
       ["https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRZ/CRZ_042_R_EN_LG.png", "https://images.pokemontcg.io/dp6/62_hires.png"],
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SHF/SHF_033_R_EN_LG.png",
-      //budew
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_1_R_JP_LG.png",
-      "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SSH/SSH_003_R_EN_LG.png",
-      "https://images.pokemontcg.io/dp7/23_hires.png",
       //cranidos
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SP/SP_274_R_EN_LG.png",
       "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ASR/ASR_077_R_EN_LG.png",
