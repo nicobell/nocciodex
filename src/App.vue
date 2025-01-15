@@ -1,8 +1,12 @@
 <template>
   <div class="wrapper"> <!-- @mousemove="makePreview" -->
 
-    <div :class="['cards']" :style="'grid-template-columns: '+ computedcolumns +';'">
-      <div class="card" v-for="(c, i) in cards">
+    <div class="editor">
+      <BinderEditor />
+    </div>
+
+    <div :class="['cards']" :style="'grid-template-columns: ' + computedcolumns + ';'">
+      <!-- <div class="card" v-for="(c, i) in cards">
         <button v-if="c.length" class="open" @click="openPreview(c)">
           <img src="./assets/eye.png" alt="occhio">
         </button>
@@ -13,35 +17,40 @@
           <img class="altcard" :src="c[1]" alt="">
         </div>
         <img v-else :src="c" :alt="'pokemon' + page + '-' + i">
+      </div> -->
+
+      <div class="card" v-for="(c, i) in fetchedCards">
+        <button v-if="c.url" class="open" @click="openPreview(c)">
+          <img src="./assets/eye.png" alt="occhio">
+        </button>
+
+        <button class="delete" @click="deleteCard(c)">
+          <img src="./assets/delete.png" alt="">
+        </button>
+
+        <img v-if="!c.url" src="./assets/back.png" alt="pokeball" class="empty">
+        <div v-else-if="c.url && c.alturl" class="multiple" @click="fixAlt">
+          <img class="maincard" :src="c.url" alt="">
+          <img class="altcard" :src="c.alturl" alt="">
+        </div>
+        <img v-else :src="c.url" :alt="'pokemon' + page + '-' + i">
       </div>
     </div>
 
-    <div class="buttons">
+    <!-- <div class="buttons">
       <button :disabled="page <= 0" @click="swipePage('first')"><<</button>
       <button :disabled="page <= 0" @click="swipePage('left')"><</button>
       <div>Pag <span style="color: #fff;">{{ parseInt(page)+1 }}</span></div>
       <button @click="swipePage('right')">></button>
       <button @click="swipePage('last')">>></button>
-    </div>
+    </div> -->
 
     <div class="options">
-      <!-- 
-      <button :class="{active: gen==0}" @click="changeGen(0)">Starters</button>
-      <button :class="{active: gen==1}" @click="changeGen(1)">1st gen</button>
-      <button :class="{active: gen==2}" @click="changeGen(2)">2nd gen</button>
-      <button :class="{active: gen==3}" @click="changeGen(3)">3rd gen</button>
-      <button :class="{active: gen==4}" @click="changeGen(4)">4th gen</button>
-      <button :class="{active: gen==5}" @click="changeGen(5)">5th gen</button>
-      <button :class="{active: gen==6}" @click="changeGen(6)">6th gen</button>
-      <button :class="{active: gen==7}" @click="changeGen(7)">7th gen</button>
-      <button :class="{active: gen==8}" @click="changeGen(8)">8th gen</button>
-      <button :class="{active: gen==9}" @click="changeGen(9)">9th gen</button> 
-      -->
 
       <div class="field">
         <label for="generation">Generation</label>
         <select v-model="gen" name="genselect" id="genselect">
-          <option value="1">Gen 1</option>
+          <!-- <option value="1">Gen 1</option>
           <option value="2">Gen 2</option>
           <option value="3">Gen 3</option>
           <option value="4">Gen 4</option>
@@ -50,7 +59,8 @@
           <option value="7">Gen 7</option>
           <option value="8">Gen 8</option>
           <option value="9">Gen 9</option>
-          <option value="0">Starters</option>
+          <option value="0">Starters</option> -->
+          <option v-for="(b, i) in binderStore.userBinders" :value="b.id">{{ b.title }}</option>
         </select>
       </div>
 
@@ -58,10 +68,9 @@
         <label for="fill">Fill pockets</label>
         <input type="checkbox" v-model="fill" id="fill" name="fill">
       </div>
-      
-      <div class="field">
+
+      <!-- <div class="field">
         <label for="ncolumns">Columns</label>
-        <!-- <input name="ncolumns" type="number" v-model="ncolumns"> -->
         <div class="radios">
           <div :class="{'radio': true, 'active': ncolumns==3}">
             <label for="pp3">3</label>
@@ -72,17 +81,19 @@
             <input name="ncolumns" id="pp4" type="radio" v-model="ncolumns" value="4">
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="field">
+      <!-- <div class="field">
         <label for="ncolumns">Cards per page</label>
         <span style="color: #fff;">{{ pagesize }}</span>
-      </div>
+      </div> -->
       <!-- <input disabled name="ncolumns" type="number" v-model="pagesize"> -->
+
+      <CardLoader v-if="isMobile" @add-card="fetchCards" />
 
     </div>
 
-    <div :class="{'preview': true, 'open': isPreviewOpen}" @click="closePreview">
+    <div :class="{ 'preview': true, 'open': isPreviewOpen }" @click="closePreview">
       <img ref="preview" src="" alt="">
     </div>
 
@@ -90,10 +101,16 @@
 </template>
 
 <script setup>
+import BinderEditor from './components/BinderEditor.vue'
+import CardLoader from './components/CardLoader.vue'
 import { useCardsStore } from '@/stores/cards'
 import { ref, onMounted, computed, useTemplateRef, getCurrentInstance, watch } from 'vue'
+import { useStore } from './stores/data'
+import { useUserStore } from './stores/users'
+import { useBinderStore } from './stores/binders'
+import { supabase } from './lib/supabaseClient'
 
-const store = useCardsStore()
+const cardsStore = useCardsStore()
 const gen = ref(1)
 const page = ref(0)
 const fill = ref(false)
@@ -103,15 +120,21 @@ const isPreviewOpen = ref(false)
 const previewRef = useTemplateRef('preview')
 //const pagesize = ref(9)
 const pagesize = computed(() => {
-  return ncolumns.value  * 3
+  return ncolumns.value * 3
 })
+
+const isMobile = computed(() => window.innerWidth < 768)
+
+const store = useStore()
+const userStore = useUserStore()
+const binderStore = useBinderStore()
 
 /* get all cards from current generation + filter 9 per page */
 const storecards = computed(() => {
-  if(fill.value)
-    return store.cards[gen.value].filter(c => c!="")
+  if (fill.value)
+    return cardsStore.cards[gen.value].filter(c => c != "")
   else
-    return store.cards[gen.value]
+    return cardsStore.cards[gen.value]
 })
 
 const cards = computed(() => {
@@ -132,17 +155,19 @@ const openPreview = (source) => {
   //console.log(previewRef.value.getAttribute('src'))
   isPreviewOpen.value = true
 
-  if(source.length > 2) {
-    previewRef.value.setAttribute('src', source)
+  console.log(source)
+
+  if (source.url && !source.alturl) {
+    previewRef.value.setAttribute('src', source.url)
 
   } else {
     let isFixed = event.target.closest('.card').querySelector('.altcard').classList.contains('fixed')
-    let altsource = event.target.closest('.card').querySelector('.altcard').getAttribute('src')
-    let mainsource = event.target.closest('.card').querySelector('.maincard').getAttribute('src')
-    if(isFixed) {
-      previewRef.value.setAttribute('src', altsource)
+    //let altsource = event.target.closest('.card').querySelector('.altcard').getAttribute('src')
+    //let mainsource = event.target.closest('.card').querySelector('.maincard').getAttribute('src')
+    if (isFixed) {
+      previewRef.value.setAttribute('src', source.alturl)
     } else {
-      previewRef.value.setAttribute('src', mainsource)
+      previewRef.value.setAttribute('src', source.url)
     }
   }
 }
@@ -153,14 +178,14 @@ const closePreview = () => {
 
 const computedcolumns = computed(() => {
   let s = ''
-  for(let i=0; i<ncolumns.value; i++)
+  for (let i = 0; i < ncolumns.value; i++)
     s += ' 1fr'
   return s
 })
 
 /* swipe page on same generation */
 const swipePage = async (dir) => {
-  switch(dir) {
+  switch (dir) {
     case 'left':
       page.value--;
       break;
@@ -171,7 +196,7 @@ const swipePage = async (dir) => {
       page.value = 0;
       break;
     case 'last':
-      page.value = Math.floor(storecards.value.length/pagesize.value)-1;
+      page.value = Math.floor(storecards.value.length / pagesize.value) - 1;
       break;
   }
   localStorage.setItem('currentPage', page.value)
@@ -182,7 +207,7 @@ const swipePage = async (dir) => {
 
 /* fix card second option */
 const fixAlt = () => {
-  if(event.target.classList.contains('fixed'))
+  if (event.target.classList.contains('fixed'))
     event.target.classList.remove('fixed')
   else
     event.target.nextElementSibling.classList.add('fixed')
@@ -196,24 +221,68 @@ const makePreview = () => {
 
 /* on reload get old page position */
 onMounted(() => {
-  if(localStorage.getItem('currentPage'))
+  if (localStorage.getItem('currentPage'))
     page.value = localStorage.getItem('currentPage')
 
-  if(localStorage.getItem('currentGen'))
+  if (localStorage.getItem('currentGen'))
     gen.value = localStorage.getItem('currentGen')
 
   console.log(localStorage.getItem('currentPage'), localStorage.getItem('currentGen'))
 })
 
 watch(gen, async (newgen, oldgen) => {
-  console.log(oldgen + ' -> ' + newgen)
+  /* console.log(oldgen + ' -> ' + newgen)
+  localStorage.setItem('currentGen', newgen) */
+
+  console.log('selected binder', newgen)
   localStorage.setItem('currentGen', newgen)
+  binderStore.selectBinder(newgen)
+  fetchCards()
 })
+
+
+const fetchedCards = ref([])
+
+const fetchCards = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('cards')
+      .select()
+      .eq('binder', binderStore.currentBinder);
+
+    console.log('fetch cards', data)
+    fetchedCards.value = data
+
+    if (error) throw error
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const deleteCard = async (c) => {
+  try {
+    const { data, error } = await supabase
+      .from('cards')
+      .delete()
+      .eq('id', c.id)
+      .select()
+
+      console.log('delete card', data)
+      fetchCards()
+    
+      if (error) throw error
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 </script>
 
 <style scoped lang="scss">
-#app { background-color: #333; }
+#app {
+  background-color: #333;
+}
 
 $card-height-mobile: 80svh;
 $card-height-desktop: 90vh;
@@ -222,7 +291,7 @@ $pokeblue: #1f2573;
 
 .wrapper {
   display: grid;
-  grid-template-areas: 
+  grid-template-areas:
     'cards'
     'pages'
     'options';
@@ -230,7 +299,7 @@ $pokeblue: #1f2573;
 }
 
 
-.cards  {
+.cards {
   grid-area: cards;
 
   display: grid;
@@ -243,7 +312,7 @@ $pokeblue: #1f2573;
   margin: 0;
   padding: .5rem;
   /* background-color: blue; */
-  
+
   .card {
     display: block;
     position: relative;
@@ -265,9 +334,13 @@ $pokeblue: #1f2573;
       left: 0;
       z-index: 1;
     }
-    .altcard { z-index: 0; }
-    .altcard.fixed { 
-      z-index: 2; 
+
+    .altcard {
+      z-index: 0;
+    }
+
+    .altcard.fixed {
+      z-index: 2;
       box-shadow: 3px 2px 2px $pokeyellow;
     }
 
@@ -284,6 +357,7 @@ $pokeblue: #1f2573;
       background-position: center center;
       background-repeat: no-repeat;
     }
+
     &:before {
       content: '';
       position: absolute;
@@ -296,6 +370,7 @@ $pokeblue: #1f2573;
     }
   }
 
+  .delete,
   .open {
     position: absolute;
     bottom: .5rem;
@@ -318,6 +393,11 @@ $pokeblue: #1f2573;
       z-index: -1;
       box-shadow: 0 0 .65rem .65rem rgba(28, 35, 92, .8);
     }
+  }
+
+  .delete {
+    bottom: unset;
+    top: .5rem;
   }
 
   img {
@@ -356,12 +436,13 @@ $pokeblue: #1f2573;
   gap: .5rem;
   padding: 0 .5rem;
 
-  > * {
+  >* {
     display: block;
     width: 25%;
   }
 
-  input, select {
+  input,
+  select {
     background-color: #666;
     border: none;
     line-height: 1em;
@@ -377,7 +458,8 @@ $pokeblue: #1f2573;
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    > label {
+
+    >label {
       font-size: .7rem;
       color: $pokeyellow;
     }
@@ -387,12 +469,12 @@ $pokeblue: #1f2573;
 .radios {
   display: flex;
   gap: .5rem;
-  
+
   .radio {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
-    
+
     label {
       display: flex;
       justify-content: center;
@@ -400,7 +482,10 @@ $pokeblue: #1f2573;
       font-size: 1rem;
       border-radius: 50%;
     }
-    input { display: none; }
+
+    input {
+      display: none;
+    }
 
     &.active label {
       color: #fff;
@@ -432,9 +517,10 @@ $pokeblue: #1f2573;
     justify-content: center;
     align-items: center;
     z-index: 100;
-    width: 100vw;    
+    width: 100vw;
     height: 100svh;
-    background-color: rgba(0,0,0,.5);
+    background-color: rgba(0, 0, 0, .5);
+
     img {
       height: calc(100% - 2rem);
       width: calc(100% - 2rem);
@@ -443,10 +529,20 @@ $pokeblue: #1f2573;
   }
 }
 
+.editor {
+  background-color: $pokeblue;
+  grid-area: preview;
+  display: none;
+}
+
 
 @media (min-width: 768px) {
+  .editor {
+    display: block;
+  }
+
   .wrapper {
-    grid-template-areas: 
+    grid-template-areas:
       'options cards empty2'
       'preview cards empty2'
       'empty pages empty2';
@@ -474,14 +570,17 @@ $pokeblue: #1f2573;
     padding: 1rem;
     gap: 1rem 0;
 
-    > * {
+    >* {
       width: 100%;
     }
 
     .field {
       align-items: flex-start;
       font-size: 1.25rem;
-      label { font-size: 1rem; }
+
+      label {
+        font-size: 1rem;
+      }
     }
 
     select {
@@ -492,7 +591,10 @@ $pokeblue: #1f2573;
   .radios {
     .radio {
       gap: .5rem;
-      input { display: block; }
+
+      input {
+        display: block;
+      }
     }
   }
 
@@ -506,5 +608,4 @@ $pokeblue: #1f2573;
     justify-content: center;
   }
 }
-
 </style>
