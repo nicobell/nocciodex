@@ -133,7 +133,7 @@ const addCard = async () => {
     try {
       const { data, error } = await supabase
         .from('cards')
-        .insert({ url: null, alturl: null, pokemon: null, binder: binderStore.currentBinder })
+        .insert({ url: '', alturl: '', pokemon: null, binder: binderStore.currentBinder })
         .select();
 
       console.log('add empty slot', data)
@@ -147,6 +147,10 @@ const addCard = async () => {
 
   emit('add-card')
 
+  maincard.value = ''
+  altcard.value = ''
+  pokemonName.value = ''
+  pokemonNumber.value = null
 }
 
 
@@ -192,12 +196,13 @@ $pokeblue: #1f2573;
 
 .interface {
   display: flex;
-  position: absolute;
-  justify-content: space-between;
-  bottom: 0;
-  right: -.5rem;
+  position: fixed;
+  justify-content: flex-start;
+  gap: 1rem;
+  top: 10svh;
+  right: 0;
   width: calc(100vw - 1rem);
-  height: 60svh;
+  height: 80svh;
   pointer-events: none;
 
   opacity: 0;
@@ -211,7 +216,7 @@ $pokeblue: #1f2573;
   &.open {
     display: flex;
     pointer-events: all;
-    bottom: calc(100% + .5rem);
+    top: .5rem;
     z-index: 101;
     opacity: 1;
     transition: all 500ms ease;

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper"> <!-- @mousemove="makePreview" -->
 
-    <div class="editor">
+    <div v-if="!isMobile" class="editor">
       <BinderEditor />
     </div>
 
@@ -19,17 +19,23 @@
         <img v-else :src="c" :alt="'pokemon' + page + '-' + i">
       </div> -->
 
-      <div class="card" v-for="(c, i) in fetchedCards">
-        <button v-if="c.url" class="open" @click="openPreview(c)">
+      <div class="card" v-for="(c, i) in pagedCards">
+        <button v-if="c.url && !hideButtons" class="open" @click="openPreview(c)">
           <img src="./assets/eye.png" alt="occhio">
         </button>
 
-        <button class="delete" @click="deleteCard(c)">
-          <img src="./assets/delete.png" alt="">
-        </button>
+        <div v-if="!c.url && !hideButtons" class="operations">
+          <!-- <button class="edit">
+            <img src="./assets/edity.png" alt="">
+          </button> -->
+          <button class="delete" @click="deleteCard(c)">
+            <img src="./assets/delete.png" alt="">
+          </button>
+        </div>
 
-        <img v-if="!c.url" src="./assets/back.png" alt="pokeball" class="empty">
-        <div v-else-if="c.url && c.alturl" class="multiple" @click="fixAlt">
+
+        <img v-if="!c.url.length" src="./assets/back.png" alt="pokeball" class="empty">
+        <div v-else-if="c.url && c.alturl" :class="{'multiple': true, 'nobutton': hideButtons}" @click="fixAlt">
           <img class="maincard" :src="c.url" alt="">
           <img class="altcard" :src="c.alturl" alt="">
         </div>
@@ -37,18 +43,18 @@
       </div>
     </div>
 
-    <!-- <div class="buttons">
+    <div class="buttons">
       <button :disabled="page <= 0" @click="swipePage('first')"><<</button>
       <button :disabled="page <= 0" @click="swipePage('left')"><</button>
       <div>Pag <span style="color: #fff;">{{ parseInt(page)+1 }}</span></div>
       <button @click="swipePage('right')">></button>
       <button @click="swipePage('last')">>></button>
-    </div> -->
+    </div>
 
     <div class="options">
 
       <div class="field">
-        <label for="generation">Generation</label>
+        <label for="generation">Binder</label>
         <select v-model="gen" name="genselect" id="genselect">
           <!-- <option value="1">Gen 1</option>
           <option value="2">Gen 2</option>
@@ -65,8 +71,14 @@
       </div>
 
       <div class="checkbox">
-        <label for="fill">Fill pockets</label>
-        <input type="checkbox" v-model="fill" id="fill" name="fill">
+        <div class="singlecheck">
+          <input type="checkbox" v-model="fill" id="fill" name="fill">
+          <label for="fill">Fill pockets</label>
+        </div>
+        <div class="singlecheck">
+          <input type="checkbox" v-model="hideButtons" id="hide" name="hide">
+          <label for="hide">Hide buttons</label>
+        </div>
       </div>
 
       <!-- <div class="field">
@@ -91,10 +103,21 @@
 
       <CardLoader v-if="isMobile" @add-card="fetchCards" />
 
+      <BinderEditor v-if="isMobile" @select-binder="gen = binderStore.currentBinder" />
     </div>
 
     <div :class="{ 'preview': true, 'open': isPreviewOpen }" @click="closePreview">
       <img ref="preview" src="" alt="">
+
+
+      <div class="operations">
+        <!-- <button class="edit">
+          <img src="./assets/edity.png" alt="">
+        </button> -->
+        <button class="delete" @click="deleteCard(currentPreview)">
+          <img src="./assets/delete.png" alt="">
+        </button>
+      </div>
     </div>
 
   </div>
@@ -116,12 +139,14 @@ const page = ref(0)
 const fill = ref(false)
 const ncolumns = ref(3)
 const isPreviewOpen = ref(false)
+const currentPreview = ref(null)
 /* preview card element */
 const previewRef = useTemplateRef('preview')
 //const pagesize = ref(9)
 const pagesize = computed(() => {
   return ncolumns.value * 3
 })
+const hideButtons = ref(false)
 
 const isMobile = computed(() => window.innerWidth < 768)
 
@@ -142,6 +167,23 @@ const cards = computed(() => {
 })
 
 
+const pagedCards = computed(() => {
+  let ccs = []
+
+  console.log(fetchedCards.value)
+
+  if(fill.value)
+    ccs = fetchedCards.value.filter(c => c.url.length)
+  else 
+    ccs = fetchedCards.value
+
+  console.log(ccs)
+
+  ccs = ccs.slice(page.value * pagesize.value, page.value * pagesize.value + pagesize.value)
+
+  return ccs
+})
+
 
 /* select pokemon generation */
 /* const changeGen = (g) => {
@@ -150,30 +192,32 @@ const cards = computed(() => {
   swipePage('first')
 } */
 
-const openPreview = (source) => {
+const openPreview = (card) => {
   //console.log(previewRef.value, source)
   //console.log(previewRef.value.getAttribute('src'))
   isPreviewOpen.value = true
+  currentPreview.value = card
 
-  console.log(source)
+  console.log('currentPreview', card)
 
-  if (source.url && !source.alturl) {
-    previewRef.value.setAttribute('src', source.url)
+  if (card.url && !card.alturl) {
+    previewRef.value.setAttribute('src', card.url)
 
   } else {
     let isFixed = event.target.closest('.card').querySelector('.altcard').classList.contains('fixed')
     //let altsource = event.target.closest('.card').querySelector('.altcard').getAttribute('src')
     //let mainsource = event.target.closest('.card').querySelector('.maincard').getAttribute('src')
     if (isFixed) {
-      previewRef.value.setAttribute('src', source.alturl)
+      previewRef.value.setAttribute('src', card.alturl)
     } else {
-      previewRef.value.setAttribute('src', source.url)
+      previewRef.value.setAttribute('src', card.url)
     }
   }
 }
 
 const closePreview = () => {
   isPreviewOpen.value = false
+  currentPreview.value = null
 }
 
 const computedcolumns = computed(() => {
@@ -260,6 +304,7 @@ const fetchCards = async () => {
 }
 
 const deleteCard = async (c) => {
+  console.log(c)
   try {
     const { data, error } = await supabase
       .from('cards')
@@ -267,10 +312,10 @@ const deleteCard = async (c) => {
       .eq('id', c.id)
       .select()
 
-      console.log('delete card', data)
-      fetchCards()
-    
-      if (error) throw error
+    console.log('delete card', data)
+    fetchCards()
+
+    if (error) throw error
   } catch (error) {
     console.log(error)
   }
@@ -319,6 +364,41 @@ $pokeblue: #1f2573;
     height: calc(($card-height-mobile - 2rem) / 3);
     width: 100%;
     /* background-color: red; */
+
+    .operations {
+      position: absolute;
+      top: .75rem;
+      left: .5rem;
+      display: flex;
+      gap: .5rem;
+
+      button {
+        width: 1.25rem;
+        height: 1.25rem;
+        padding: 0;
+        background: none;
+        border: none;
+        position: relative;
+
+        img {
+          position: relative;
+          z-index: 1;
+          border-radius: 0;
+        }
+
+        &:before {
+          content: '';
+          position: absolute;
+          bottom: 50%;
+          right: 50%;
+          translate: -50% -50%;
+          width: 0;
+          height: 0;
+          z-index: 0;
+          box-shadow: 0 0 .75rem .75rem rgba(28, 35, 92, .8);
+        }
+      }
+    }
   }
 
   .multiple {
@@ -344,7 +424,7 @@ $pokeblue: #1f2573;
       box-shadow: 3px 2px 2px $pokeyellow;
     }
 
-    &:after {
+    &:not(.nobutton):after {
       content: '';
       position: absolute;
       bottom: .35rem;
@@ -358,7 +438,7 @@ $pokeblue: #1f2573;
       background-repeat: no-repeat;
     }
 
-    &:before {
+    &:not(.nobutton):before {
       content: '';
       position: absolute;
       bottom: 1.1rem;
@@ -370,7 +450,6 @@ $pokeblue: #1f2573;
     }
   }
 
-  .delete,
   .open {
     position: absolute;
     bottom: .5rem;
@@ -393,11 +472,6 @@ $pokeblue: #1f2573;
       z-index: -1;
       box-shadow: 0 0 .65rem .65rem rgba(28, 35, 92, .8);
     }
-  }
-
-  .delete {
-    bottom: unset;
-    top: .5rem;
   }
 
   img {
@@ -433,13 +507,13 @@ $pokeblue: #1f2573;
   flex-direction: row;
   align-items: flex-start;
   width: 100vw;
-  gap: .5rem;
-  padding: 0 .5rem;
+  justify-content: space-between;
+  padding: 0 1rem;
 
-  >* {
+  /* >* {
     display: block;
     width: 25%;
-  }
+  } */
 
   input,
   select {
@@ -455,12 +529,10 @@ $pokeblue: #1f2573;
   .field {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
     height: 100%;
 
-    >label {
-      font-size: .7rem;
+    > label {
+      font-size: .8rem;
       color: $pokeyellow;
     }
   }
@@ -496,15 +568,21 @@ $pokeblue: #1f2573;
 
 .checkbox {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  height: 100%;
+  align-items: flex-start;
   gap: .5rem;
-  align-items: center;
-  font-size: .7rem;
-  line-height: 1em;
-  margin: auto;
-  color: $pokeyellow;
+
+  .singlecheck {
+    gap: .5rem;
+    font-size: .8rem;
+    line-height: 1em;
+    align-items: center;
+    color: $pokeyellow;
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 .preview {
@@ -525,6 +603,46 @@ $pokeblue: #1f2573;
       height: calc(100% - 2rem);
       width: calc(100% - 2rem);
       object-fit: contain;
+    }
+  }
+
+  .operations {
+    position: absolute;
+    top: 5svh;
+    left: 0;
+    margin: 0 2rem;
+    z-index: 4;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    width: calc(100% - 4rem);
+  }
+
+  .edit,
+  .delete {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: none;
+    background: none;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      width: 0;
+      height: 0;
+      z-index: -1;
+      box-shadow: 0 0 .65rem .65rem rgba(28, 35, 92, .8);
     }
   }
 }
