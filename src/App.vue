@@ -1,45 +1,24 @@
 <template>
-  <div class="wrapper"> <!-- @mousemove="makePreview" -->
-
-    <div v-if="!isMobile" class="editor">
-      <BinderEditor />
-    </div>
+  <div class="wrapper">
 
     <div :class="['cards']" :style="'grid-template-columns: ' + computedcolumns + ';'">
-      <!-- <div class="card" v-for="(c, i) in cards">
-        <button v-if="c.length" class="open" @click="openPreview(c)">
-          <img src="./assets/eye.png" alt="occhio">
-        </button>
-
-        <img v-if="c==''" src="./assets/back.png" alt="pokeball" class="empty">
-        <div v-else-if="c.length>=2 && c.length<=4" class="multiple" @click="fixAlt">
-          <img class="maincard" :src="c[0]" alt="">
-          <img class="altcard" :src="c[1]" alt="">
-        </div>
-        <img v-else :src="c" :alt="'pokemon' + page + '-' + i">
-      </div> -->
-
-      <div class="card" v-for="(c, i) in pagedCards">
-        <button v-if="c.url && !hideButtons" class="open" @click="openPreview(c)">
-          <img src="./assets/eye.png" alt="occhio">
-        </button>
-
-        <div v-if="!c.url && !hideButtons" class="operations">
-          <!-- <button class="edit">
-            <img src="./assets/edity.png" alt="">
-          </button> -->
-          <button class="delete" @click="deleteCard(c)">
-            <img src="./assets/delete.png" alt="">
-          </button>
-        </div>
-
-
+      <div class="card" v-for="(c, i) in pagedCards" @click="fixAlt(c)">
         <img v-if="!c.url.length" src="./assets/back.png" alt="pokeball" class="empty">
-        <div v-else-if="c.url && c.alturl" :class="{'multiple': true, 'nobutton': hideButtons}" @click="fixAlt">
-          <img class="maincard" :src="c.url" alt="">
-          <img class="altcard" :src="c.alturl" alt="">
+        <img v-if="c.url.length" class="maincard" :src="c.url" alt="">
+        <img v-if="c.alturl.length" class="altcard" :src="c.alturl" alt="">
+
+        <div v-if="c.alturl.length && !hideButtons" class="button alt">
+          <img src="./assets/alty.png" alt="">
         </div>
-        <img v-else :src="c.url" :alt="'pokemon' + page + '-' + i">
+
+        <button v-if="c.url.length  && !hideButtons" class="button eye" @click="openPreview(c)">
+          <img src="./assets/eye.png" alt="">
+        </button>
+
+        <button v-if="!c.url.length && !hideButtons" class="button delete" @click="deleteCard(c)">
+          <img src="./assets/delete.png" alt="">
+        </button>
+
       </div>
     </div>
 
@@ -56,26 +35,16 @@
       <div class="field">
         <label for="generation">Binder</label>
         <select v-model="gen" name="genselect" id="genselect">
-          <!-- <option value="1">Gen 1</option>
-          <option value="2">Gen 2</option>
-          <option value="3">Gen 3</option>
-          <option value="4">Gen 4</option>
-          <option value="5">Gen 5</option>
-          <option value="6">Gen 6</option>
-          <option value="7">Gen 7</option>
-          <option value="8">Gen 8</option>
-          <option value="9">Gen 9</option>
-          <option value="0">Starters</option> -->
           <option v-for="(b, i) in binderStore.userBinders" :value="b.id">{{ b.title }}</option>
         </select>
       </div>
 
-      <div class="checkbox">
-        <div class="singlecheck">
+      <div class="field">
+        <div class="checkbox">
           <input type="checkbox" v-model="fill" id="fill" name="fill">
           <label for="fill">Fill pockets</label>
         </div>
-        <div class="singlecheck">
+        <div class="checkbox">
           <input type="checkbox" v-model="hideButtons" id="hide" name="hide">
           <label for="hide">Hide buttons</label>
         </div>
@@ -95,29 +64,21 @@
         </div>
       </div> -->
 
-      <!-- <div class="field">
-        <label for="ncolumns">Cards per page</label>
-        <span style="color: #fff;">{{ pagesize }}</span>
-      </div> -->
-      <!-- <input disabled name="ncolumns" type="number" v-model="pagesize"> -->
-
       <CardLoader v-if="isMobile" @add-card="fetchCards" />
 
       <BinderEditor v-if="isMobile" @select-binder="gen = binderStore.currentBinder" />
     </div>
 
     <div :class="{ 'preview': true, 'open': isPreviewOpen }" @click="closePreview">
-      <img ref="preview" src="" alt="">
-
-
       <div class="operations">
         <!-- <button class="edit">
           <img src="./assets/edity.png" alt="">
         </button> -->
-        <button class="delete" @click="deleteCard(currentPreview)">
+        <button class="button delete" @click="deleteCard(currentPreview)">
           <img src="./assets/delete.png" alt="">
         </button>
       </div>
+      <img ref="preview" src="" alt="">
     </div>
 
   </div>
@@ -126,99 +87,25 @@
 <script setup>
 import BinderEditor from './components/BinderEditor.vue'
 import CardLoader from './components/CardLoader.vue'
-import { useCardsStore } from '@/stores/cards'
-import { ref, onMounted, computed, useTemplateRef, getCurrentInstance, watch } from 'vue'
+//import { useCardsStore } from '@/stores/cards'
+import { ref, onMounted, computed, useTemplateRef, watch } from 'vue'
 import { useStore } from './stores/data'
 import { useUserStore } from './stores/users'
 import { useBinderStore } from './stores/binders'
 import { supabase } from './lib/supabaseClient'
 
-const cardsStore = useCardsStore()
-const gen = ref(1)
-const page = ref(0)
-const fill = ref(false)
-const ncolumns = ref(3)
-const isPreviewOpen = ref(false)
-const currentPreview = ref(null)
-/* preview card element */
-const previewRef = useTemplateRef('preview')
-//const pagesize = ref(9)
-const pagesize = computed(() => {
-  return ncolumns.value * 3
-})
-const hideButtons = ref(false)
+//const store = useStore()
+//const userStore = useUserStore()
+const binderStore = useBinderStore()
+//const cardsStore = useCardsStore()
 
 const isMobile = computed(() => window.innerWidth < 768)
 
-const store = useStore()
-const userStore = useUserStore()
-const binderStore = useBinderStore()
-
-/* get all cards from current generation + filter 9 per page */
-const storecards = computed(() => {
-  if (fill.value)
-    return cardsStore.cards[gen.value].filter(c => c != "")
-  else
-    return cardsStore.cards[gen.value]
-})
-
-const cards = computed(() => {
-  return storecards.value.slice(page.value * pagesize.value, page.value * pagesize.value + pagesize.value)
-})
-
-
-const pagedCards = computed(() => {
-  let ccs = []
-
-  console.log(fetchedCards.value)
-
-  if(fill.value)
-    ccs = fetchedCards.value.filter(c => c.url.length)
-  else 
-    ccs = fetchedCards.value
-
-  console.log(ccs)
-
-  ccs = ccs.slice(page.value * pagesize.value, page.value * pagesize.value + pagesize.value)
-
-  return ccs
-})
-
-
-/* select pokemon generation */
-/* const changeGen = (g) => {
-  gen.value = g
-  localStorage.setItem('currentGen', gen.value)
-  swipePage('first')
-} */
-
-const openPreview = (card) => {
-  //console.log(previewRef.value, source)
-  //console.log(previewRef.value.getAttribute('src'))
-  isPreviewOpen.value = true
-  currentPreview.value = card
-
-  console.log('currentPreview', card)
-
-  if (card.url && !card.alturl) {
-    previewRef.value.setAttribute('src', card.url)
-
-  } else {
-    let isFixed = event.target.closest('.card').querySelector('.altcard').classList.contains('fixed')
-    //let altsource = event.target.closest('.card').querySelector('.altcard').getAttribute('src')
-    //let mainsource = event.target.closest('.card').querySelector('.maincard').getAttribute('src')
-    if (isFixed) {
-      previewRef.value.setAttribute('src', card.alturl)
-    } else {
-      previewRef.value.setAttribute('src', card.url)
-    }
-  }
-}
-
-const closePreview = () => {
-  isPreviewOpen.value = false
-  currentPreview.value = null
-}
+/* visuals */
+const fill = ref(false)
+const hideButtons = ref(false)
+const ncolumns = ref(3)
+const pagesize = computed(() => { return ncolumns.value * 3 })
 
 const computedcolumns = computed(() => {
   let s = ''
@@ -226,6 +113,10 @@ const computedcolumns = computed(() => {
     s += ' 1fr'
   return s
 })
+
+/* binder grid parameters */
+const gen = ref(1)
+const page = ref(0)
 
 /* swipe page on same generation */
 const swipePage = async (dir) => {
@@ -245,22 +136,26 @@ const swipePage = async (dir) => {
   }
   localStorage.setItem('currentPage', page.value)
   document.querySelectorAll('.fixed').forEach(el => el.classList.remove('fixed'))
-
-  console.log(localStorage.getItem('currentPage'), localStorage.getItem('currentGen'))
 }
+
+/* get page of cards */
+const pagedCards = computed(() => {
+  let ccs = []
+
+  if(fill.value)
+    ccs = fetchedCards.value.filter(c => c.url.length)
+  else 
+    ccs = fetchedCards.value
+
+  ccs = ccs.slice(page.value * pagesize.value, page.value * pagesize.value + pagesize.value)
+
+  return ccs
+})
 
 /* fix card second option */
-const fixAlt = () => {
-  if (event.target.classList.contains('fixed'))
-    event.target.classList.remove('fixed')
-  else
-    event.target.nextElementSibling.classList.add('fixed')
-}
-
-/* preview card on hover */
-const makePreview = () => {
-  let imgsource = event.target.src
-  previewRef.value.src = imgsource
+const fixAlt = (card) => {
+  if(card.alturl.length)
+    event.target.classList.toggle('fixed')
 }
 
 /* on reload get old page position */
@@ -274,17 +169,42 @@ onMounted(() => {
   console.log(localStorage.getItem('currentPage'), localStorage.getItem('currentGen'))
 })
 
+/* load cards on binder change */
 watch(gen, async (newgen, oldgen) => {
-  /* console.log(oldgen + ' -> ' + newgen)
-  localStorage.setItem('currentGen', newgen) */
-
-  console.log('selected binder', newgen)
   localStorage.setItem('currentGen', newgen)
   binderStore.selectBinder(newgen)
   fetchCards()
 })
 
+/* preview management */
+const isPreviewOpen = ref(false)
+const currentPreview = ref(null)
+const previewRef = useTemplateRef('preview')
 
+const openPreview = (card) => {
+  isPreviewOpen.value = true
+  currentPreview.value = card
+
+  if (card.url && !card.alturl) {
+    previewRef.value.setAttribute('src', card.url)
+
+  } else {
+    let isFixed = event.target.closest('.card').querySelector('.altcard').classList.contains('fixed')
+
+    if (isFixed) {
+      previewRef.value.setAttribute('src', card.alturl)
+    } else {
+      previewRef.value.setAttribute('src', card.url)
+    }
+  }
+}
+
+const closePreview = () => {
+  isPreviewOpen.value = false
+  currentPreview.value = null
+}
+
+/* supabase operations */
 const fetchedCards = ref([])
 
 const fetchCards = async () => {
@@ -320,171 +240,121 @@ const deleteCard = async (c) => {
     console.log(error)
   }
 }
-
-
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+$pokeyellow: #F1E668;
+$pokeblue: #1f2573;
+$lightgray: #cacaca;
+
 #app {
   background-color: #333;
 }
 
-$card-height-mobile: 80svh;
-$card-height-desktop: 90vh;
-$pokeyellow: #F1E668;
-$pokeblue: #1f2573;
-
 .wrapper {
-  display: grid;
-  grid-template-areas:
-    'cards'
-    'pages'
-    'options';
+  display: flex;
   gap: 1rem;
+  height: 100svh;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 1rem;
 }
 
-
 .cards {
-  grid-area: cards;
-
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   gap: .5rem;
-
-  height: $card-height-mobile;
+  height: fit-content;
+  width: fit-content;
+  margin: 0 auto;
   width: 100vw;
-  margin: 0;
   padding: .5rem;
-  /* background-color: blue; */
 
   .card {
     display: block;
     position: relative;
-    height: calc(($card-height-mobile - 2rem) / 3);
-    width: 100%;
-    /* background-color: red; */
-
-    .operations {
-      position: absolute;
-      top: .75rem;
-      left: .5rem;
-      display: flex;
-      gap: .5rem;
-
-      button {
-        width: 1.25rem;
-        height: 1.25rem;
-        padding: 0;
-        background: none;
-        border: none;
-        position: relative;
-
-        img {
-          position: relative;
-          z-index: 1;
-          border-radius: 0;
-        }
-
-        &:before {
-          content: '';
-          position: absolute;
-          bottom: 50%;
-          right: 50%;
-          translate: -50% -50%;
-          width: 0;
-          height: 0;
-          z-index: 0;
-          box-shadow: 0 0 .75rem .75rem rgba(28, 35, 92, .8);
-        }
-      }
-    }
-  }
-
-  .multiple {
-    position: relative;
-    width: 100%;
     height: 100%;
-    /* background-color: green; */
+    width: 100%;
+    aspect-ratio: 0.75;
 
-    .altcard,
-    .maincard {
+    img {
+      object-fit: contain;
+      height: 100%;
+      width: 100%;
+      object-position: top left;
+      max-height: 200px;
+      pointer-events: none;
+    }
+
+    .button {
       position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-
-    .altcard {
-      z-index: 0;
-    }
-
-    .altcard.fixed {
-      z-index: 2;
-      box-shadow: 3px 2px 2px $pokeyellow;
-    }
-
-    &:not(.nobutton):after {
-      content: '';
-      position: absolute;
-      bottom: .35rem;
-      right: .35rem;
-      width: 1.5rem;
-      height: 1.5rem;
-      z-index: 4;
-      background-size: contain;
-      background-image: url(./assets/alty.png);
-      background-position: center center;
-      background-repeat: no-repeat;
-    }
-
-    &:not(.nobutton):before {
-      content: '';
-      position: absolute;
-      bottom: 1.1rem;
-      right: 1.1rem;
-      width: 0;
-      height: 0;
       z-index: 3;
-      box-shadow: 0 0 .75rem .75rem rgba(28, 35, 92, .8);
+    }
+    .alt {
+      bottom: .5rem;
+      right: .5rem;
+    }
+    .eye {
+      left: .5rem;
+      bottom: .5rem
+    }
+    .delete {
+      top: .5rem;
+      left: .5rem;
     }
   }
 
-  .open {
+  .card .maincard {
+    position: relative;
+    z-index: 1;
+  }
+
+  .card .altcard {
     position: absolute;
-    bottom: .5rem;
-    left: .5rem;
-    z-index: 4;
-    width: 1.25rem;
-    height: 1.25rem;
-    padding: 0;
-    border: none;
-    background: none;
-
-    &:before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      translate: -50% -50%;
-      width: 0;
-      height: 0;
-      z-index: -1;
-      box-shadow: 0 0 .65rem .65rem rgba(28, 35, 92, .8);
-    }
+    top: 0;
+    left: 0;
+    z-index: 0;
   }
-
-  img {
-    object-fit: contain;
-    height: 100%;
-    width: 100%;
-    border-radius: 10px;
+  .card.fixed .altcard {
+    z-index: 2;
   }
 }
 
+.button {
+  width: 1.25rem;
+  height: 1.25rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &:before {
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    box-shadow: 0 0 10px 10px $pokeblue;
+    opacity: .8;
+    z-index: -1;
+  }
+}
 
 .buttons {
   grid-area: pages;
+  margin: auto 0 0 0 ;
 
   display: flex;
   justify-content: center;
@@ -498,90 +368,72 @@ $pokeblue: #1f2573;
   }
 }
 
-
 .options {
-  grid-area: options;
-  justify-content: center;
-
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: flex-start;
   width: 100vw;
-  justify-content: space-between;
+  max-height: 10svh;
   padding: 0 1rem;
 
-  /* >* {
-    display: block;
-    width: 25%;
-  } */
-
-  input,
-  select {
-    background-color: #666;
-    border: none;
-    line-height: 1em;
-    padding: .25rem .5rem;
-    color: #fff;
-    height: fit-content;
-    border-radius: 3rem;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
+  > .field {
     height: 100%;
-
-    > label {
-      font-size: .8rem;
-      color: $pokeyellow;
-    }
   }
 }
 
-.radios {
+.field {
   display: flex;
-  gap: .5rem;
-
-  .radio {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-
-    label {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1rem;
-      border-radius: 50%;
-    }
-
-    input {
-      display: none;
-    }
-
-    &.active label {
-      color: #fff;
-      font-weight: 700;
-    }
+  flex-direction: column;
+  gap: .25rem;
+  label {
+    font-size: .8rem;
+    color: $pokeyellow;
   }
 }
 
 .checkbox {
   display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.loader {
+  display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100%;
-  align-items: flex-start;
-  gap: .5rem;
 
-  .singlecheck {
-    gap: .5rem;
-    font-size: .8rem;
-    line-height: 1em;
-    align-items: center;
-    color: $pokeyellow;
+  .loaderbutton {
+    background-color: $pokeyellow;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
     display: flex;
-    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    transition: 300ms ease all;
+    transform-origin: center center;
+    transform: rotateY(0);
+
+    &.close {
+      transform: rotateY(180deg);
+      transition: 300ms ease all;
+    }
+
+    img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+    }
+  }
+
+  label,
+  .label {
+    color: $pokeyellow;
+    font-size: 1rem;
   }
 }
 
@@ -597,133 +449,95 @@ $pokeblue: #1f2573;
     z-index: 100;
     width: 100vw;
     height: 100svh;
-    background-color: rgba(0, 0, 0, .5);
+    background-color: rgba(0, 0, 0, .7);
 
-    img {
+    > img {
       height: calc(100% - 2rem);
       width: calc(100% - 2rem);
       object-fit: contain;
     }
   }
 
+  .button:before {
+    box-shadow: 0 0 10px 10px $pokeyellow;
+    opacity: .3;
+  }
+
   .operations {
     position: absolute;
-    top: 5svh;
-    left: 0;
-    margin: 0 2rem;
-    z-index: 4;
+    width: calc(100% - 2rem);
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
     align-items: center;
-    width: calc(100% - 4rem);
-  }
-
-  .edit,
-  .delete {
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0;
-    border: none;
-    background: none;
-    position: relative;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    &:before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      translate: -50% -50%;
-      width: 0;
-      height: 0;
-      z-index: -1;
-      box-shadow: 0 0 .65rem .65rem rgba(28, 35, 92, .8);
-    }
+    top: 1.5rem;
+    left: 1rem;
   }
 }
 
-.editor {
+select {
+  border-radius: 3rem;
+  background-color: $lightgray;
+  border: none;
+  padding: .25rem .5rem;
+}
+
+input {
+  padding: .5rem .5rem;
+  border: none;
+  background-color: rgba(255, 255, 255, .3);
+  border-radius: 3rem;
+  color: #fff;
+
+  &:disabled {
+    opacity: .3;
+  }
+}
+
+.formbutton {
+  border-radius: 3rem;
+  background-color: $lightgray;
+  color: $pokeblue;
+  font-size: .8rem;
+  border: none;
+  padding: .5rem 1rem;
+}
+
+.radios {
+  display: flex;
+  gap: 1rem;
+  .radio {
+    display: flex;
+    gap: .25rem;
+  }
+}
+
+.interface {
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+  top: 10svh;
+  right: 0;
+  width: calc(100vw - 1rem);
+  height: calc(90svh - 1.5rem);
+  padding: 1rem;
+  margin: 0 .5rem;
+  
+  pointer-events: none;
+  opacity: 0;
   background-color: $pokeblue;
-  grid-area: preview;
-  display: none;
-}
+  color: #fff;
+  border-radius: 10px;
+  transition: all 500ms ease;
 
-
-@media (min-width: 768px) {
-  .editor {
-    display: block;
-  }
-
-  .wrapper {
-    grid-template-areas:
-      'options cards empty2'
-      'preview cards empty2'
-      'empty pages empty2';
-    grid-template-columns: 20vw 70vw 10vw;
-  }
-
-
-  .cards {
-    width: fit-content;
-    height: $card-height-desktop;
-    margin: 0 auto;
-
-    .card {
-      height: calc(($card-height-desktop - 2rem) / 3);
-    }
-  }
-
-
-  .options {
-    padding-top: 2rem;
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 1rem;
-    gap: 1rem 0;
-
-    >* {
-      width: 100%;
-    }
-
-    .field {
-      align-items: flex-start;
-      font-size: 1.25rem;
-
-      label {
-        font-size: 1rem;
-      }
-    }
-
-    select {
-      font-size: 1.25rem;
-    }
-  }
-
-  .radios {
-    .radio {
-      gap: .5rem;
-
-      input {
-        display: block;
-      }
-    }
-  }
-
-  .checkbox {
-    justify-content: flex-end;
-    font-size: 1.25rem;
-  }
-
-  .buttons {
-    width: 100%;
-    justify-content: center;
+  &.open {
+    display: flex;
+    pointer-events: all;
+    top: .5rem;
+    z-index: 102;
+    opacity: 1;
+    transition: all 500ms ease;
   }
 }
 </style>

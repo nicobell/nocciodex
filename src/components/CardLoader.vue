@@ -1,17 +1,19 @@
 <template>
   <div :class="{ 'loader': true, 'mobile': isMobile }">
-    <button :class="{ 'addcard': true, 'close': isOpen }" @click="toggleLoader">+</button>
+
+    <button :class="{ 'loaderbutton': true, 'addcard': true, 'close': isOpen }" @click="toggleLoader">
+      <img src="../assets/card.png" alt="">
+    </button>
 
     <div :class="{ 'interface': true, 'open': isOpen }">
 
-      <p class="intro">Select card or empty slot</p>
+      <div>Select card or empty slot</div>
 
       <div class="radios">
         <div class="radio">
           <input id="card" type="radio" v-model="type" value="card">
           <label for="card">Card</label>
         </div>
-
         <div class="radio">
           <input id="empty" type="radio" v-model="type" value="empty">
           <label for="empty">Empty slot</label>
@@ -28,14 +30,13 @@
         <input :disabled="type == 'empty'" type="text" id="altimage" v-model="altcard">
       </div>
 
-      <div class="autocomplete">
+      <div class="autocomplete field">
         <label :class="{ 'disabled': type == 'empty' }" for="pokemon">Selected pokemon</label>
-        <!-- Campo di input -->
         <input :disabled="type == 'empty'" id="pokemon" type="text" v-model="pokemonName"
-          @focus="toggleSuggestions(true)" @blur="toggleSuggestions(false)" @input="toggleSuggestions(true)"
+          @focus="toggleSuggestions(true)" 
+          @blur="toggleSuggestions(false)" 
+          @input="toggleSuggestions(true)"
           placeholder="Cerca Pokémon..." />
-
-        <!-- Elenco dei suggerimenti -->
         <ul v-if="showSuggestions && filteredPokemons.length" class="suggestions">
           <li v-for="pokemon in filteredPokemons" :key="pokemon.pokedex_number"
             @mousedown.prevent="selectPokemon(pokemon)">
@@ -44,12 +45,10 @@
         </ul>
       </div>
 
-      <div :class="{ 'disabled': type == 'empty', 'number': true }">Pokedex number <span>{{ pokemonNumber }}</span></div>
+      <div :class="{ 'disabled': type == 'empty', 'label': true }">Pokedex number <span>{{ pokemonNumber }}</span></div>
 
-      <button class="add" @click="addCard" :disabled="type=='card' && (!maincard || !pokemonNumber)">Add card</button>
-
+      <button class="formbutton add" @click="addCard" :disabled="type=='card' && (!maincard || !pokemonNumber)">Add card</button>
     </div>
-
   </div>
 </template>
 
@@ -162,124 +161,16 @@ $card-height-desktop: 90vh;
 $pokeyellow: #F1E668;
 $pokeblue: #1f2573;
 
-.loader {
-  position: relative;
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
 
-.intro {
-  color: #fff;
-}
-
-.addcard {
-  padding: .5rem;
-  border-radius: 50%;
-  border: none;
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.5rem;
-  font-weight: 300;
+.label {
+  align-items: baseline;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 300ms ease;
-
-  &.close {
-    transform-origin: center center;
-    rotate: 45deg;
-    transition: all 300ms ease;
-  }
-}
-
-.interface {
-  display: flex;
-  position: fixed;
-  justify-content: flex-start;
+  flex-direction: row;
   gap: 1rem;
-  top: 10svh;
-  right: 0;
-  width: calc(100vw - 1rem);
-  height: 80svh;
-  pointer-events: none;
-
-  opacity: 0;
-  background-color: $pokeblue;
-  padding: 1rem;
-  margin: 0 .5rem;
-  border-radius: 10px;
-  transition: all 500ms ease;
-  flex-direction: column;
-
-  &.open {
-    display: flex;
-    pointer-events: all;
-    top: .5rem;
-    z-index: 101;
-    opacity: 1;
-    transition: all 500ms ease;
-
-
-  }
 }
-
-.radios {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.radio {
-  display: flex;
-  gap: .5rem;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  color: $pokeyellow;
-
-  &.disabled {
-    opacity: .3;
-  }
-}
-
-input {
-  padding: .25rem .5rem;
-  border: none;
-  background-color: rgba(255, 255, 255, .3);
-  border-radius: 10px;
+.label span {
   color: #fff;
-
-  &:disabled {
-    opacity: .3;
-  }
-}
-
-.number {
-  color: $pokeyellow;
-
-  &.disabled {
-    opacity: .3;
-  }
-
-  span {
-    color: #fff;
-  }
-}
-
-.add {
-  margin: 0 auto;
-  padding: .25rem 2rem;
-  border-radius: 3rem;
-  border: none;
-  color: $pokeblue;
-  font-weight: 500;
+  font-size: 1rem;
 }
 
 /* autocomplete */
@@ -307,10 +198,6 @@ input {
 .suggestions li {
   padding: .25rem .5rem;
   font-size: .8rem;
-  cursor: pointer;
 }
 
-.suggestions li:hover {
-  background-color: #f0f0f0;
-}
 </style>
