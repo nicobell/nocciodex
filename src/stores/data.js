@@ -4,10 +4,15 @@ import { defineStore } from 'pinia'
 export const useStore = defineStore('data', () => {
   
   const pokemons = ref([])
+  const editingCard = ref(null)
 
   function loadPokemons(pokes) {
     pokemons.value = pokes
   }
 
-  return { pokemons, loadPokemons }
+  function setEditing(card) {
+    editingCard.value = card
+  }
+
+  return { pokemons, editingCard, loadPokemons, setEditing }
 })

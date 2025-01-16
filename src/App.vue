@@ -11,11 +11,15 @@
           <img src="./assets/alty.png" alt="">
         </div>
 
+        <button v-if="!hideButtons" class="button edit" @click="openEditor(c)">
+          <img src="./assets/edity.png" alt="">
+        </button>
+
         <button v-if="c.url.length  && !hideButtons" class="button eye" @click="openPreview(c)">
           <img src="./assets/eye.png" alt="">
         </button>
 
-        <button v-if="!c.url.length && !hideButtons" class="button delete" @click="deleteCard(c)">
+        <button v-if="!hideButtons" class="button delete" @click="deleteCard(c)">
           <img src="./assets/delete.png" alt="">
         </button>
 
@@ -71,15 +75,17 @@
 
     <div :class="{ 'preview': true, 'open': isPreviewOpen }" @click="closePreview">
       <div class="operations">
-        <!-- <button class="edit">
+        <button class="button edit" @click="openEditor(currentPreview)">
           <img src="./assets/edity.png" alt="">
-        </button> -->
+        </button>
         <button class="button delete" @click="deleteCard(currentPreview)">
           <img src="./assets/delete.png" alt="">
         </button>
       </div>
       <img ref="preview" src="" alt="">
     </div>
+
+    <CardEditor :isOpen="isOpenEditor" @edit-card="closeEditor()" @close-editor="closeEditor()" />
 
   </div>
 </template>
@@ -93,8 +99,9 @@ import { useStore } from './stores/data'
 import { useUserStore } from './stores/users'
 import { useBinderStore } from './stores/binders'
 import { supabase } from './lib/supabaseClient'
+import CardEditor from './components/CardEditor.vue'
 
-//const store = useStore()
+const store = useStore()
 //const userStore = useUserStore()
 const binderStore = useBinderStore()
 //const cardsStore = useCardsStore()
@@ -174,6 +181,7 @@ watch(gen, async (newgen, oldgen) => {
   localStorage.setItem('currentGen', newgen)
   binderStore.selectBinder(newgen)
   fetchCards()
+  page.value = 0
 })
 
 /* preview management */
@@ -189,7 +197,9 @@ const openPreview = (card) => {
     previewRef.value.setAttribute('src', card.url)
 
   } else {
-    let isFixed = event.target.closest('.card').querySelector('.altcard').classList.contains('fixed')
+    let isFixed = event.target.closest('.card').classList.contains('fixed')
+
+    console.log(isFixed)
 
     if (isFixed) {
       previewRef.value.setAttribute('src', card.alturl)
@@ -204,6 +214,20 @@ const closePreview = () => {
   currentPreview.value = null
 }
 
+/* editor management */
+const isOpenEditor = ref(false)
+
+const openEditor = (card) => {
+  isOpenEditor.value = true
+  store.setEditing(card)
+}
+
+const closeEditor = (card) => {
+  isOpenEditor.value = false
+  store.setEditing(null)
+  fetchCards()
+}
+
 /* supabase operations */
 const fetchedCards = ref([])
 
@@ -212,10 +236,13 @@ const fetchCards = async () => {
     const { data, error } = await supabase
       .from('cards')
       .select()
-      .eq('binder', binderStore.currentBinder);
+      .eq('binder', binderStore.currentBinder)
+      .order('id', { ascending: true });
 
     console.log('fetch cards', data)
     fetchedCards.value = data
+
+    console.log(fetchedCards.value, data)
 
     if (error) throw error
   } catch (error) {
@@ -291,9 +318,15 @@ $lightgray: #cacaca;
       position: absolute;
       z-index: 3;
     }
-    .alt {
+    .edit {
       bottom: .5rem;
       right: .5rem;
+    }
+    .alt {
+      left: 50%;
+      bottom: .5rem;
+      translate: -50% 0;
+      pointer-events: none;
     }
     .eye {
       left: .5rem;
@@ -430,11 +463,7 @@ $lightgray: #cacaca;
     }
   }
 
-  label,
-  .label {
-    color: $pokeyellow;
-    font-size: 1rem;
-  }
+  
 }
 
 .preview {
@@ -538,6 +567,12 @@ input {
     z-index: 102;
     opacity: 1;
     transition: all 500ms ease;
+  }
+
+  label,
+  .label {
+    color: $pokeyellow;
+    font-size: 1rem;
   }
 }
 </style>
