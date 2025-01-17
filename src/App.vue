@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" @mousemove="compilePreview()">
 
     <div :class="['cards']" :style="'grid-template-columns: ' + computedcolumns + ';'">
       <div class="card" v-for="(c, i) in pagedCards" @click="fixAlt(c)">
@@ -15,7 +15,7 @@
           <img src="./assets/edity.png" alt="">
         </button>
 
-        <button v-if="c.url.length  && !hideButtons" class="button eye" @click="openPreview(c)">
+        <button v-if="c.url.length  && !hideButtons && isMobile" class="button eye" @click="openPreview(c)">
           <img src="./assets/eye.png" alt="">
         </button>
 
@@ -88,7 +88,7 @@
     </div>
 
     <div :class="{ 'preview': true, 'open': isPreviewOpen }" @click="closePreview">
-      <div class="operations">
+      <div v-if="isMobile" class="operations">
         <button class="button edit" @click="openEditor(currentPreview)">
           <img src="./assets/edity.png" alt="">
         </button>
@@ -226,6 +226,22 @@ const openPreview = (card) => {
 const closePreview = () => {
   isPreviewOpen.value = false
   currentPreview.value = null
+}
+
+const compilePreview = () => {
+  console.log(event.target)
+
+  let t = event.target
+  if(t.classList.contains('card')) {
+    previewRef.value.style.opacity = 1
+    if(t.classList.contains('fixed'))
+      previewRef.value.setAttribute('src', t.querySelector('.altcard').getAttribute('src'))
+    else
+      previewRef.value.setAttribute('src', t.querySelector('.maincard').getAttribute('src'))
+  } else {
+    previewRef.value.setAttribute('src', '')
+    previewRef.value.style.opacity = 0
+  }
 }
 
 /* editor management */
@@ -556,6 +572,28 @@ $lightgray: #cacaca;
     align-items: center;
     top: 1.5rem;
     left: 1rem;
+  }
+}
+@media (min-width: 1024px) {
+  .preview {
+    position: absolute;
+    top: unset;
+    bottom: 5rem;
+    left: 2rem;
+    width: 23vw;
+    height: fit-content;
+    background: none;
+    transition: all 500ms ease;
+    display: block;
+    pointer-events: none;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: .75;
+      object-position: left top;
+      object-fit: contain;
+    }
   }
 }
 
