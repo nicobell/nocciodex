@@ -10,11 +10,11 @@
       <div>Select card or empty slot</div>
 
       <div class="radios">
-        <div class="radio">
+        <div :class="['radio', {'active': type=='card'}]">
           <input id="card" type="radio" v-model="type" value="card">
           <label for="card">Card</label>
         </div>
-        <div class="radio">
+        <div :class="['radio', {'active': type=='empty'}]">
           <input id="empty" type="radio" v-model="type" value="empty">
           <label for="empty">Empty slot</label>
         </div>
@@ -64,7 +64,7 @@ const store = useStore()
 const userStore = useUserStore()
 const binderStore = useBinderStore()
 
-const isMobile = computed(() => window.innerWidth < 768)
+const isMobile = computed(() => window.innerWidth < 1024)
 
 const maincard = ref('')
 const altcard = ref('')

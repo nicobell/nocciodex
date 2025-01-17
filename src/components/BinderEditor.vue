@@ -43,7 +43,7 @@ import { useUserStore } from '@/stores/users'
 import { useBinderStore } from '@/stores/binders'
 import { useStore } from '@/stores/data';
 
-const isMobile = computed(() => window.innerWidth < 768)
+const isMobile = computed(() => window.innerWidth < 1024)
 
 const userStore = useUserStore()
 const binderStore = useBinderStore()

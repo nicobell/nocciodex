@@ -56,7 +56,7 @@ const props = defineProps(['isOpen'])
 const openWather = computed(() => { return props.isOpen })
 const store = useStore()
 
-const isMobile = computed(() => window.innerWidth < 768)
+const isMobile = computed(() => window.innerWidth < 1024)
 
 const maincard = ref('')
 const altcard = ref('')

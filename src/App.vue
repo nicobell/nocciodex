@@ -27,11 +27,25 @@
     </div>
 
     <div class="buttons">
+      <div v-if="isMobile" class="field columns">
+        <label for="ncolumns">Columns</label>
+        <div class="radios">
+          <div :class="{'radio': true, 'active': ncolumns==3}">
+            <input name="ncolumns" id="pp3" type="radio" v-model="ncolumns" value="3">
+            <label for="pp3">3</label>
+          </div>
+          <div :class="{'radio': true, 'active': ncolumns==4}">
+            <input name="ncolumns" id="pp4" type="radio" v-model="ncolumns" value="4">
+            <label for="pp4">4</label>
+          </div>
+        </div>
+      </div>
+
       <button :disabled="page <= 0" @click="swipePage('first')"><<</button>
       <button :disabled="page <= 0" @click="swipePage('left')"><</button>
       <div>Pag <span style="color: #fff;">{{ parseInt(page)+1 }}</span></div>
       <button @click="swipePage('right')">></button>
-      <button @click="swipePage('last')">>></button>
+      <!-- <button @click="swipePage('last')">>></button> -->
     </div>
 
     <div class="options">
@@ -54,7 +68,7 @@
         </div>
       </div>
 
-      <!-- <div class="field">
+      <div v-if="!isMobile" class="field columns">
         <label for="ncolumns">Columns</label>
         <div class="radios">
           <div :class="{'radio': true, 'active': ncolumns==3}">
@@ -66,11 +80,11 @@
             <input name="ncolumns" id="pp4" type="radio" v-model="ncolumns" value="4">
           </div>
         </div>
-      </div> -->
+      </div>
 
-      <CardLoader v-if="isMobile" @add-card="fetchCards" />
+      <CardLoader @add-card="fetchCards" />
 
-      <BinderEditor v-if="isMobile" @select-binder="gen = binderStore.currentBinder" />
+      <BinderEditor @select-binder="gen = binderStore.currentBinder" />
     </div>
 
     <div :class="{ 'preview': true, 'open': isPreviewOpen }" @click="closePreview">
@@ -106,7 +120,7 @@ const store = useStore()
 const binderStore = useBinderStore()
 //const cardsStore = useCardsStore()
 
-const isMobile = computed(() => window.innerWidth < 768)
+const isMobile = computed(() => window.innerWidth < 1024)
 
 /* visuals */
 const fill = ref(false)
@@ -353,6 +367,24 @@ $lightgray: #cacaca;
     z-index: 2;
   }
 }
+@media (min-width: 1024px) {
+  .wrapper {
+    padding: 0;
+  }
+
+  .cards {
+    gap: .5rem;
+    height: 100vh;
+    width: fit-content;
+    padding: 2rem 1rem;
+    margin: 0 auto 0 calc(25vw + 2rem);
+    .card {
+      img {
+        max-height: calc((100vh - 5rem) / 3);
+      }
+    }
+  }
+}
 
 .button {
   width: 1.25rem;
@@ -400,6 +432,13 @@ $lightgray: #cacaca;
     border: none;
   }
 }
+@media (min-width: 1024px) {
+  .buttons {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+  }
+}
 
 .options {
   display: flex;
@@ -414,6 +453,18 @@ $lightgray: #cacaca;
     height: 100%;
   }
 }
+@media (min-width: 1024px) {
+  .options {
+    position: absolute;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    max-height: unset;
+    width: calc(25vw - 4rem);
+    padding: 2rem;
+    gap: 2rem;
+  }
+}
 
 .field {
   display: flex;
@@ -422,6 +473,11 @@ $lightgray: #cacaca;
   label {
     font-size: .8rem;
     color: $pokeyellow;
+  }
+}
+@media (min-width: 1024px) {
+  .field {
+    width: 100%;
   }
 }
 
@@ -533,10 +589,20 @@ input {
 
 .radios {
   display: flex;
-  gap: 1rem;
+  gap: .5rem;
   .radio {
     display: flex;
-    gap: .25rem;
+    gap: 0;
+
+    label {
+      opacity: .7;
+      padding: 0 .5rem;
+    }
+
+    &.active label {
+      font-weight: 700;
+      opacity: 1;
+    }
   }
 }
 
@@ -573,6 +639,19 @@ input {
   .label {
     color: $pokeyellow;
     font-size: 1rem;
+  }
+}
+@media (min-width: 1024px) {
+  .interface {
+    width: fit-content;
+    min-width: 25vw;
+    right: -10%;
+    translate: 0 0;
+    top: 2rem;
+    &.open {
+      top: 2rem;
+      right: 2rem;
+    }
   }
 }
 </style>
