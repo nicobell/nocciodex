@@ -1,31 +1,15 @@
 <template>
   <div class="wrapper" @mousemove="compilePreview">
 
-    <div :class="['cards']" :style="'grid-template-columns: ' + computedcolumns + ';'">
-      <div class="card" v-for="(c, i) in pagedCards" @click="fixAlt(c)">
-        <!-- <img v-if="!c.url.length" src="./assets/back.png" alt="pokeball" class="empty"> -->
-         <div v-if="!c.url.length" class="empty"></div>
-        <img v-if="c.url.length" class="maincard" :src="c.url" alt="">
-        <img v-if="c.alturl.length" class="altcard" :src="c.alturl" alt="">
-
-        <div v-if="c.alturl.length && !hideButtons" class="button alt">
-          <img src="./assets/alty.png" alt="">
-        </div>
-
-        <button v-if="!hideButtons" class="button edit" @click="openEditor(c)">
-          <img src="./assets/edity.png" alt="">
-        </button>
-
-        <button v-if="c.url.length  && !hideButtons && isMobile" class="button eye" @click="openPreview(c)">
-          <img src="./assets/eye.png" alt="">
-        </button>
-
-        <button v-if="!hideButtons" class="button delete" @click="deleteCard(c)">
-          <img src="./assets/delete.png" alt="">
-        </button>
-
-      </div>
-    </div>
+    <CardPages 
+      :cards="pagedCards"
+      :computedcolumns="computedcolumns"
+      :ncolumns="ncolumns"
+      :page="page"
+      :hidebuttons="hideButtons"
+      :isMobile="isMobile"
+      @open-editor="openEditor" @open-preview="openPreview" @delete-card="deleteCard" 
+    />
 
     <div class="buttons">
       <div v-if="isMobile" class="field columns">
@@ -46,7 +30,7 @@
       <button :disabled="page <= 0" @click="swipePage('left')"><</button>
       <div>Pag <span style="color: #fff;">{{ parseInt(page)+1 }}</span></div>
       <button @click="swipePage('right')">></button>
-      <!-- <button @click="swipePage('last')">>></button> -->
+      <button @click="swipePage('last')">>></button>
     </div>
 
     <div class="options">
@@ -79,6 +63,10 @@
           <div :class="{'radio': true, 'active': ncolumns==4}">
             <label for="pp4">4</label>
             <input name="ncolumns" id="pp4" type="radio" v-model="ncolumns" value="4">
+          </div>
+          <div :class="{'radio': true, 'active': ncolumns==5}">
+            <label for="pp5">2P</label>
+            <input name="ncolumns" id="pp5" type="radio" v-model="ncolumns" value="5">
           </div>
         </div>
       </div>
@@ -115,6 +103,7 @@ import { useUserStore } from './stores/users'
 import { useBinderStore } from './stores/binders'
 import { supabase } from './lib/supabaseClient'
 import CardEditor from './components/CardEditor.vue'
+import CardPages from './components/CardPages.vue'
 
 const store = useStore()
 //const userStore = useUserStore()
@@ -127,7 +116,7 @@ const isMobile = computed(() => window.innerWidth < 1024)
 const fill = ref(false)
 const hideButtons = ref(false)
 const ncolumns = ref(3)
-const pagesize = computed(() => { return ncolumns.value * 3 })
+const pagesize = computed(() => { return ncolumns.value<5 ? ncolumns.value * 3 : 9 })
 
 const computedcolumns = computed(() => {
   let s = ''
@@ -144,16 +133,27 @@ const page = ref(0)
 const swipePage = async (dir) => {
   switch (dir) {
     case 'left':
-      page.value--;
+    if(ncolumns.value<5 || page.value==1)
+        page.value--;
+      else
+        page.value -= 2;
       break;
     case 'right':
-      page.value++;
+      if(ncolumns.value<5 || page.value==0)
+        page.value++;
+      else
+        page.value += 2;
       break;
     case 'first':
       page.value = 0;
       break;
     case 'last':
-      page.value = Math.floor(storecards.value.length / pagesize.value) - 1;
+      let pagedcs = []
+      if(fill.value)
+        pagedcs = fetchedCards.value.filter(c => c.url.length)
+      else 
+        pagedcs = fetchedCards.value
+      page.value = Math.ceil(pagedcs.length / pagesize.value) - 1;
       break;
   }
   localStorage.setItem('currentPage', page.value)
@@ -169,16 +169,15 @@ const pagedCards = computed(() => {
   else 
     ccs = fetchedCards.value
 
-  ccs = ccs.slice(page.value * pagesize.value, page.value * pagesize.value + pagesize.value)
+  if(ncolumns.value<5)
+    ccs = ccs.slice(page.value * pagesize.value, page.value * pagesize.value + pagesize.value)
+  else
+    ccs = ccs.slice(page.value * pagesize.value, page.value * pagesize.value + (pagesize.value * 2))
 
   return ccs
 })
 
-/* fix card second option */
-const fixAlt = (card) => {
-  if(card.alturl.length)
-    event.target.classList.toggle('fixed')
-}
+
 
 /* on reload get old page position */
 onMounted(() => {
@@ -316,94 +315,9 @@ $lightgray: #cacaca;
   padding-bottom: 1rem;
 }
 
-.cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: .5rem;
-  height: fit-content;
-  width: fit-content;
-  margin: 0 auto;
-  width: 100vw;
-  padding: .5rem;
-
-  .card {
-    display: block;
-    position: relative;
-    height: 100%;
-    width: 100%;
-    aspect-ratio: 0.75;
-
-    img {
-      object-fit: contain;
-      height: 100%;
-      width: 100%;
-      object-position: top left;
-      max-height: 200px;
-      pointer-events: none;
-    }
-
-    .button {
-      position: absolute;
-      z-index: 3;
-    }
-    .edit {
-      bottom: .5rem;
-      right: .5rem;
-    }
-    .alt {
-      left: 50%;
-      bottom: .5rem;
-      translate: -50% 0;
-      pointer-events: none;
-    }
-    .eye {
-      left: .5rem;
-      bottom: .5rem
-    }
-    .delete {
-      top: .5rem;
-      left: .5rem;
-    }
-  }
-
-  .card .maincard {
-    position: relative;
-    z-index: 1;
-  }
-
-  .card .altcard {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-  }
-  .card.fixed .altcard {
-    z-index: 2;
-  }
-
-  .empty {
-    border: 2px #666 dashed;
-    width: 100%;
-    height: 100%;
-  }
-}
 @media (min-width: 1024px) {
   .wrapper {
     padding: 0;
-  }
-
-  .cards {
-    gap: .5rem;
-    height: 100vh;
-    width: fit-content;
-    padding: 2rem 1rem;
-    margin: 0 auto 0 calc(25vw + 2rem);
-    .card {
-      img {
-        max-height: calc((100vh - 5rem) / 3);
-      }
-    }
   }
 }
 
@@ -443,9 +357,9 @@ $lightgray: #cacaca;
   margin: auto 0 0 0 ;
 
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  padding: 0 1rem;
 
   button {
     padding: .5rem 1rem;
