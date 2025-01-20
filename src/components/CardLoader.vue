@@ -119,13 +119,13 @@ const addCard = async () => {
         .insert({ url: maincard.value, alturl: altcard.value, pokemon: pokemonNumber.value, binder: binderStore.currentBinder })
         .select();
 
-      console.log('add card', data)
+      //console.log('add card', data)
       toggleLoader()
       
     
       if(error) throw error
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
 
   } else {
@@ -135,12 +135,12 @@ const addCard = async () => {
         .insert({ url: '', alturl: '', pokemon: null, binder: binderStore.currentBinder })
         .select();
 
-      console.log('add empty slot', data)
+      //console.log('add empty slot', data)
       toggleLoader()
     
       if(error) throw error
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
   }
 

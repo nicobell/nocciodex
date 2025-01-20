@@ -3,7 +3,8 @@
 
     <div :class="['cards']" :style="'grid-template-columns: ' + computedcolumns + ';'">
       <div class="card" v-for="(c, i) in pagedCards" @click="fixAlt(c)">
-        <img v-if="!c.url.length" src="./assets/back.png" alt="pokeball" class="empty">
+        <!-- <img v-if="!c.url.length" src="./assets/back.png" alt="pokeball" class="empty"> -->
+         <div v-if="!c.url.length" class="empty"></div>
         <img v-if="c.url.length" class="maincard" :src="c.url" alt="">
         <img v-if="c.alturl.length" class="altcard" :src="c.alturl" alt="">
 
@@ -187,7 +188,7 @@ onMounted(() => {
   if (localStorage.getItem('currentGen'))
     gen.value = localStorage.getItem('currentGen')
 
-  console.log(localStorage.getItem('currentPage'), localStorage.getItem('currentGen'))
+  //console.log(localStorage.getItem('currentPage'), localStorage.getItem('currentGen'))
 })
 
 /* load cards on binder change */
@@ -213,8 +214,6 @@ const openPreview = (card) => {
   } else {
     let isFixed = event.target.closest('.card').classList.contains('fixed')
 
-    console.log(isFixed)
-
     if (isFixed) {
       previewRef.value.setAttribute('src', card.alturl)
     } else {
@@ -229,18 +228,18 @@ const closePreview = () => {
 }
 
 const compilePreview = () => {
-  console.log(event.target)
-
-  let t = event.target
-  if(t.classList.contains('card')) {
-    previewRef.value.style.opacity = 1
-    if(t.classList.contains('fixed'))
-      previewRef.value.setAttribute('src', t.querySelector('.altcard').getAttribute('src'))
-    else
-      previewRef.value.setAttribute('src', t.querySelector('.maincard').getAttribute('src'))
-  } else {
-    previewRef.value.setAttribute('src', '')
-    previewRef.value.style.opacity = 0
+  if(!isMobile) {
+    let t = event.target
+    if(t.classList.contains('card')) {
+      previewRef.value.style.opacity = 1
+      if(t.classList.contains('fixed'))
+        previewRef.value.setAttribute('src', t.querySelector('.altcard').getAttribute('src'))
+      else
+        previewRef.value.setAttribute('src', t.querySelector('.maincard').getAttribute('src'))
+    } else {
+      previewRef.value.setAttribute('src', '')
+      previewRef.value.style.opacity = 0
+    }
   }
 }
 
@@ -269,19 +268,19 @@ const fetchCards = async () => {
       .eq('binder', binderStore.currentBinder)
       .order('id', { ascending: true });
 
-    console.log('fetch cards', data)
+    //console.log('fetch cards', data)
     fetchedCards.value = data
 
-    console.log(fetchedCards.value, data)
+    //console.log(fetchedCards.value, data)
 
     if (error) throw error
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 
 const deleteCard = async (c) => {
-  console.log(c)
+  //console.log(c)
   try {
     const { data, error } = await supabase
       .from('cards')
@@ -289,12 +288,12 @@ const deleteCard = async (c) => {
       .eq('id', c.id)
       .select()
 
-    console.log('delete card', data)
+    //console.log('delete card', data)
     fetchCards()
 
     if (error) throw error
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 </script>
@@ -381,6 +380,12 @@ $lightgray: #cacaca;
   }
   .card.fixed .altcard {
     z-index: 2;
+  }
+
+  .empty {
+    border: 2px #666 dashed;
+    width: 100%;
+    height: 100%;
   }
 }
 @media (min-width: 1024px) {
@@ -542,7 +547,6 @@ $lightgray: #cacaca;
   display: none;
 
   &.open {
-    display: block;
     position: absolute;
     display: flex;
     justify-content: center;

@@ -71,7 +71,7 @@ const loadUser = async () => {
 
     if (error) throw error
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 
   loadBinders()
@@ -93,7 +93,7 @@ const loadBinders = async () => {
     
     if (error) throw error
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 
@@ -111,7 +111,7 @@ const addBinder = async () => {
 
     if (error) throw error
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 
   loadBinders()
