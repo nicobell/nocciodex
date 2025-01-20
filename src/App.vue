@@ -372,6 +372,8 @@ $lightgray: #cacaca;
     position: absolute;
     bottom: 2rem;
     left: 2rem;
+    gap: 1rem;
+    padding: 0;
   }
 }
 
