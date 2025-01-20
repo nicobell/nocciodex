@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" @mousemove="compilePreview()">
+  <div class="wrapper" @mousemove="compilePreview">
 
     <div :class="['cards']" :style="'grid-template-columns: ' + computedcolumns + ';'">
       <div class="card" v-for="(c, i) in pagedCards" @click="fixAlt(c)">
@@ -228,7 +228,7 @@ const closePreview = () => {
 }
 
 const compilePreview = () => {
-  if(!isMobile) {
+  if(!isMobile.value) {
     let t = event.target
     if(t.classList.contains('card')) {
       previewRef.value.style.opacity = 1
