@@ -1,5 +1,6 @@
 <template>
   <div :class="['card-wrapper', {'doublepage': props.ncolumns==5}]">
+
     <div v-if="props.ncolumns<5 || (props.ncolumns==5 && props.page==0)" class="cards" :style="'grid-template-columns: ' + (props.ncolumns<5 ? props.computedcolumns : '1fr 1fr 1fr') + ';'">
       <div class="card" v-for="(c, i) in props.cards.slice(0,props.ncolumns<5?props.cards.length:9)" @click="fixAlt(c)">
 
@@ -45,6 +46,7 @@
 
       </div>
     </div>
+
     <div v-if="props.ncolumns==5 && props.page>0" class="cards doublepage secondpage" style="grid-template-columns: 1fr 1fr 1fr;">
       <div class="card" v-for="(c, i) in props.cards.slice(9, props.cards.length)" @click="fixAlt(c)">
 
@@ -73,7 +75,7 @@
 
 <script setup>
 
-defineEmits(['open-preview', 'delete-card', 'open-editor'])
+const emit = defineEmits(['open-preview', 'delete-card', 'open-editor'])
 const props = defineProps(['cards', 'hidebuttons', 'computedcolumns', 'ncolumns', 'isMobile', 'page'])
 
 /* fix card second option */
