@@ -121,11 +121,7 @@ watch(openWather, async (newvalue, oldvalue) => {
 </script>
 
 <style scoped lang="scss">
-$card-height-mobile: 80svh;
-$card-height-desktop: 90vh;
-$pokeyellow: #F1E668;
-$pokeblue: #1f2573;
-
+@use "@/assets/variables.scss" as *;
 
 .label {
   align-items: baseline;
@@ -136,7 +132,7 @@ $pokeblue: #1f2573;
 
 .label span {
   color: #fff;
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 .cancel {
@@ -170,6 +166,6 @@ $pokeblue: #1f2573;
 
 .suggestions li {
   padding: .25rem .5rem;
-  font-size: .8rem;
+  font-size: .9em;
 }
 </style>

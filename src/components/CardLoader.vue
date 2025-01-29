@@ -47,7 +47,7 @@
 
       <div :class="{ 'disabled': type == 'empty', 'label': true }">Pokedex number <span>{{ pokemonNumber }}</span></div>
 
-      <button class="formbutton add" @click="addCard" :disabled="type=='card' && (!maincard || !pokemonNumber)">Add card</button>
+      <button :class="['formbutton', 'add', {'disabled': type=='card' && !maincard}]" @click="addCard" :disabled="type=='card' && !maincard">Add card</button>
     </div>
   </div>
 </template>
@@ -156,11 +156,7 @@ const addCard = async () => {
 </script>
 
 <style scoped lang="scss">
-$card-height-mobile: 80svh;
-$card-height-desktop: 90vh;
-$pokeyellow: #F1E668;
-$pokeblue: #1f2573;
-
+@use "@/assets/variables.scss" as *;
 
 .label {
   align-items: baseline;
@@ -170,7 +166,7 @@ $pokeblue: #1f2573;
 }
 .label span {
   color: #fff;
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 /* autocomplete */
@@ -197,7 +193,7 @@ $pokeblue: #1f2573;
 
 .suggestions li {
   padding: .25rem .5rem;
-  font-size: .8rem;
+  font-size: .9em;
 }
 
 </style>

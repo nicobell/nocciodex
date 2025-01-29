@@ -139,10 +139,7 @@ async function getPokemons() {
 </script>
 
 <style scoped lang="scss">
-$card-height-mobile: 80svh;
-$card-height-desktop: 90vh;
-$pokeyellow: #F1E668;
-$pokeblue: #1f2573;
+@use "@/assets/variables.scss" as *;
 
 .wrapper {
   position: relative;

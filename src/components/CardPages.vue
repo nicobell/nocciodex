@@ -86,8 +86,7 @@ const fixAlt = (card) => {
 </script>
 
 <style scoped lang="scss">
-
-$cardsh: 90vh;
+@use "@/assets/variables.scss" as *;
 
 .cards {
   display: grid;
@@ -165,7 +164,7 @@ $cardsh: 90vh;
   .card-wrapper {
     display: flex;
     justify-content: flex-start;
-    width: 75vw;
+    width: 76vw;
     margin: 0 0 0 auto;
   }
 
@@ -173,12 +172,12 @@ $cardsh: 90vh;
     gap: .5rem;
     height: $cardsh;
     width: fit-content;
-    padding: 2rem 1rem;
+    padding: 1rem;
     /* margin: 0 auto 0 calc(25vw + 2rem); */
     margin: 0;
     .card {
       img {
-        max-height: calc(($cardsh - 5rem) / 3);
+        max-height: calc(($cardsh - 3rem) / 3);
       }
     }
 

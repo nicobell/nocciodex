@@ -298,13 +298,7 @@ const deleteCard = async (c) => {
 </script>
 
 <style lang="scss">
-$pokeyellow: #F1E668;
-$pokeblue: #1f2573;
-$lightgray: #cacaca;
-
-#app {
-  background-color: #333;
-}
+@use "@/assets/variables.scss" as *;
 
 .wrapper {
   display: flex;
@@ -408,7 +402,7 @@ $lightgray: #cacaca;
   flex-direction: column;
   gap: .25rem;
   label {
-    font-size: .8rem;
+    font-size: .9em;
     color: $pokeyellow;
   }
 }
@@ -532,7 +526,7 @@ input {
   color: #fff;
 
   &:disabled {
-    opacity: .3;
+    opacity: .2;
   }
 }
 
@@ -540,7 +534,7 @@ input {
   border-radius: 3rem;
   background-color: $lightgray;
   color: $pokeblue;
-  font-size: .8rem;
+  font-size: .9em;
   border: none;
   padding: .5rem 1rem;
 }
@@ -562,6 +556,10 @@ input {
       opacity: 1;
     }
   }
+}
+
+.disabled {
+  opacity: .2;
 }
 
 .interface {
@@ -596,7 +594,7 @@ input {
   label,
   .label {
     color: $pokeyellow;
-    font-size: 1rem;
+    font-size: 1em;
   }
 }
 @media (min-width: 1024px) {
