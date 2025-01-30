@@ -5,16 +5,16 @@
       <img src="../assets/card.png" alt="">
     </button>
 
-    <div :class="{ 'interface': true, 'open': isOpen }">
+    <div :class="{ 'interface': true, 'open': isOpen, 'pulse': props.pulse }">
 
       <div>Select card or empty slot</div>
 
       <div class="radios">
-        <div :class="['radio', {'active': type=='card'}]">
+        <div :class="['radio', { 'active': type == 'card' }]">
           <input id="card" type="radio" v-model="type" value="card">
           <label for="card">Card</label>
         </div>
-        <div :class="['radio', {'active': type=='empty'}]">
+        <div :class="['radio', { 'active': type == 'empty' }]">
           <input id="empty" type="radio" v-model="type" value="empty">
           <label for="empty">Empty slot</label>
         </div>
@@ -33,9 +33,7 @@
       <div class="autocomplete field">
         <label :class="{ 'disabled': type == 'empty' }" for="pokemon">Selected pokemon</label>
         <input :disabled="type == 'empty'" id="pokemon" type="text" v-model="pokemonName"
-          @focus="toggleSuggestions(true)" 
-          @blur="toggleSuggestions(false)" 
-          @input="toggleSuggestions(true)"
+          @focus="toggleSuggestions(true)" @blur="toggleSuggestions(false)" @input="toggleSuggestions(true)"
           placeholder="Cerca Pokémon..." />
         <ul v-if="showSuggestions && filteredPokemons.length" class="suggestions">
           <li v-for="pokemon in filteredPokemons" :key="pokemon.pokedex_number"
@@ -47,7 +45,9 @@
 
       <div :class="{ 'disabled': type == 'empty', 'label': true }">Pokedex number <span>{{ pokemonNumber }}</span></div>
 
-      <button :class="['formbutton', 'add', {'disabled': type=='card' && !maincard}]" @click="addCard" :disabled="type=='card' && !maincard">Add card</button>
+      <button :class="['formbutton', 'add', { 'disabled': type == 'card' && !maincard }]" @click="addCard"
+        :disabled="type == 'card' && !maincard">Add card</button>
+      <button class="formbutton cancel" @click="emit('close-loader')">Cancel</button>
     </div>
   </div>
 </template>
@@ -57,12 +57,14 @@ import { supabase } from '@/lib/supabaseClient';
 import { useBinderStore } from '@/stores/binders';
 import { useStore } from '@/stores/data';
 import { useUserStore } from '@/stores/users';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
-const isOpen = ref(false)
+//const isOpen = ref(false)
 const store = useStore()
 const userStore = useUserStore()
 const binderStore = useBinderStore()
+const emit = defineEmits(['add-card', 'toggle-loader', 'close-loader'])
+const props = defineProps(['isOpen', 'pulse'])
 
 const isMobile = computed(() => window.innerWidth < 1024)
 
@@ -71,10 +73,11 @@ const altcard = ref('')
 const type = ref('card')
 
 const toggleLoader = () => {
-  isOpen.value = !isOpen.value
+  //isOpen.value = !isOpen.value
+  emit('toggle-loader')
 }
 
-const emit = defineEmits(['add-card'])
+
 
 // Campo di input con v-model
 const pokemonName = ref('');
@@ -101,7 +104,23 @@ const toggleSuggestions = (state) => {
   showSuggestions.value = state;
 };
 
-const addCard = async () => {
+const addCard = () => {
+  emit('add-card', {
+    maincard: maincard.value,
+    altcard: altcard.value,
+    type: type.value,
+    pokemonName: pokemonName.value,
+    pokemonNumber: pokemonNumber.value,
+    binder: binderStore.currentBinder
+  })
+
+  maincard.value = ''
+  altcard.value = ''
+  pokemonName.value = ''
+  pokemonNumber.value = null
+}
+
+/* const addCard = async () => {
   if(!userStore.currentId) {
     alert('Prima carica un profilo!')
     return false
@@ -150,50 +169,20 @@ const addCard = async () => {
   altcard.value = ''
   pokemonName.value = ''
   pokemonNumber.value = null
-}
+} */
 
+const openWatcher = computed(() => props.isOpen)
+
+watch(openWatcher, async (newvalue, oldvalue) => {
+  if (!newvalue) {
+    maincard.value = ''
+    altcard.value = ''
+    pokemonName.value = ''
+    pokemonNumber.value = null
+  }
+})
 
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/variables.scss" as *;
-
-.label {
-  align-items: baseline;
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-}
-.label span {
-  color: #fff;
-  font-size: 1em;
-}
-
-/* autocomplete */
-.autocomplete {
-  position: relative;
-  input { width: 100%; }
-}
-
-.suggestions {
-  color: #fff;
-  position: absolute;
-  top: calc(100% + .5rem);
-  left: 0;
-  right: 0;
-  background: #666;
-  border-radius: 10px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 1000;
-}
-
-.suggestions li {
-  padding: .25rem .5rem;
-  font-size: .9em;
-}
-
 </style>

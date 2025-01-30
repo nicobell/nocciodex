@@ -21,6 +21,16 @@
           <img src="../assets/delete.png" alt="delete">
         </button>
 
+        <button v-if="!props.hidebuttons" class="button addleft" @click="emit('add-card-position', c.order)">
+          <img src="../assets/add.png" alt="add left">
+        </button>
+
+        <button v-if="!props.hidebuttons" class="button addright" @click="emit('add-card-position', c.order+1)">
+          <img src="../assets/add.png" alt="add right">
+        </button>
+
+        <!-- <div v-if="!props.hidebuttons" class="button order">{{ c.order }}</div> -->
+
       </div>
     </div>
 
@@ -75,7 +85,7 @@
 
 <script setup>
 
-const emit = defineEmits(['open-preview', 'delete-card', 'open-editor'])
+const emit = defineEmits(['open-preview', 'delete-card', 'open-editor', 'add-card-position'])
 const props = defineProps(['cards', 'hidebuttons', 'computedcolumns', 'ncolumns', 'isMobile', 'page'])
 
 /* fix card second option */
@@ -136,6 +146,19 @@ const fixAlt = (card) => {
     .delete {
       top: .5rem;
       left: .5rem;
+    }
+    .addright {
+      top: 50%;
+      right: .5rem;
+    }
+    .addleft {
+      top: 50%;
+      left: .5rem;
+    }
+    .order {
+      color: $pokeyellow;
+      top: .5rem;
+      left: 50%;
     }
   }
 

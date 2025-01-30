@@ -5,6 +5,7 @@ export const useBinderStore = defineStore('binder', () => {
   
   const userBinders = ref(null)
   const currentBinder = ref(null)
+  const lastBinderOrder = ref(null)
   
   function loadBinders(binders) {
     userBinders.value = binders
@@ -14,5 +15,9 @@ export const useBinderStore = defineStore('binder', () => {
     currentBinder.value = id
   }
 
-  return { userBinders, currentBinder, loadBinders, selectBinder }
+  function setLastOrder(order) {
+    lastBinderOrder.value = order
+  }
+
+  return { userBinders, currentBinder, lastBinderOrder, loadBinders, selectBinder, setLastOrder }
 })

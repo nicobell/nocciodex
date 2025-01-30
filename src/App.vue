@@ -1,36 +1,32 @@
 <template>
   <div class="wrapper" @mousemove="compilePreview">
 
-    <CardPages 
-      :cards="pagedCards"
-      :computedcolumns="computedcolumns"
-      :ncolumns="ncolumns"
-      :page="page"
-      :hidebuttons="hideButtons"
-      :isMobile="isMobile"
-      @open-editor="openEditor" @open-preview="openPreview" @delete-card="deleteCard" 
-    />
+    <CardPages :cards="pagedCards" :computedcolumns="computedcolumns" :ncolumns="ncolumns" :page="page"
+      :hidebuttons="hideButtons" :isMobile="isMobile" @open-editor="openEditor" @open-preview="openPreview"
+      @delete-card="deleteCard" @add-card-position="addCardPosition" />
 
     <div class="buttons">
       <div v-if="isMobile" class="field columns">
         <label for="ncolumns">Columns</label>
         <div class="radios">
-          <div :class="{'radio': true, 'active': ncolumns==3}">
+          <div :class="{ 'radio': true, 'active': ncolumns == 3 }">
             <input name="ncolumns" id="pp3" type="radio" v-model="ncolumns" value="3">
             <label for="pp3">3</label>
           </div>
-          <div :class="{'radio': true, 'active': ncolumns==4}">
+          <div :class="{ 'radio': true, 'active': ncolumns == 4 }">
             <input name="ncolumns" id="pp4" type="radio" v-model="ncolumns" value="4">
             <label for="pp4">4</label>
           </div>
         </div>
       </div>
 
-      <button :disabled="page <= 0" @click="swipePage('first')"><<</button>
-      <button :disabled="page <= 0" @click="swipePage('left')"><</button>
-      <div>Pag <span style="color: #fff;">{{ parseInt(page)+1 }}</span></div>
-      <button @click="swipePage('right')">></button>
-      <button @click="swipePage('last')">>></button>
+      <button :disabled="page <= 0" @click="swipePage('first')">
+        <<</button>
+          <button :disabled="page <= 0" @click="swipePage('left')">
+            <</button>
+              <div>Pag <span style="color: #fff;">{{ parseInt(page) + 1 }}</span></div>
+              <button @click="swipePage('right')">></button>
+              <button @click="swipePage('last')">>></button>
     </div>
 
     <div class="options">
@@ -56,22 +52,23 @@
       <div v-if="!isMobile" class="field columns">
         <label for="ncolumns">Columns</label>
         <div class="radios">
-          <div :class="{'radio': true, 'active': ncolumns==3}">
+          <div :class="{ 'radio': true, 'active': ncolumns == 3 }">
             <label for="pp3">3</label>
             <input name="ncolumns" id="pp3" type="radio" v-model="ncolumns" value="3">
           </div>
-          <div :class="{'radio': true, 'active': ncolumns==4}">
+          <div :class="{ 'radio': true, 'active': ncolumns == 4 }">
             <label for="pp4">4</label>
             <input name="ncolumns" id="pp4" type="radio" v-model="ncolumns" value="4">
           </div>
-          <div :class="{'radio': true, 'active': ncolumns==5}">
+          <div :class="{ 'radio': true, 'active': ncolumns == 5 }">
             <label for="pp5">2P</label>
             <input name="ncolumns" id="pp5" type="radio" v-model="ncolumns" value="5">
           </div>
         </div>
       </div>
 
-      <CardLoader @add-card="fetchCards" />
+      <CardLoader :isOpen="isLoaderOpen" :pulse="pulseLoader" @add-card="addCard" @toggle-loader="toggleLoader" @close-loader="closeLoader" />
+      <!-- @add-card="fetchCards" -->
 
       <BinderEditor @select-binder="gen = binderStore.currentBinder" />
     </div>
@@ -116,7 +113,7 @@ const isMobile = computed(() => window.innerWidth < 1024)
 const fill = ref(false)
 const hideButtons = ref(false)
 const ncolumns = ref(3)
-const pagesize = computed(() => { return ncolumns.value<5 ? ncolumns.value * 3 : 9 })
+const pagesize = computed(() => { return ncolumns.value < 5 ? ncolumns.value * 3 : 9 })
 
 const computedcolumns = computed(() => {
   let s = ''
@@ -133,13 +130,13 @@ const page = ref(0)
 const swipePage = async (dir) => {
   switch (dir) {
     case 'left':
-    if(ncolumns.value<5 || page.value==1)
+      if (ncolumns.value < 5 || page.value == 1)
         page.value--;
       else
         page.value -= 2;
       break;
     case 'right':
-      if(ncolumns.value<5 || page.value==0)
+      if (ncolumns.value < 5 || page.value == 0)
         page.value++;
       else
         page.value += 2;
@@ -149,9 +146,9 @@ const swipePage = async (dir) => {
       break;
     case 'last':
       let pagedcs = []
-      if(fill.value)
+      if (fill.value)
         pagedcs = fetchedCards.value.filter(c => c.url.length)
-      else 
+      else
         pagedcs = fetchedCards.value
       page.value = Math.ceil(pagedcs.length / pagesize.value) - 1;
       break;
@@ -164,19 +161,18 @@ const swipePage = async (dir) => {
 const pagedCards = computed(() => {
   let ccs = []
 
-  if(fill.value)
+  if (fill.value)
     ccs = fetchedCards.value.filter(c => c.url.length)
-  else 
+  else
     ccs = fetchedCards.value
 
-  if(ncolumns.value<5)
+  if (ncolumns.value < 5)
     ccs = ccs.slice(page.value * pagesize.value, page.value * pagesize.value + pagesize.value)
   else
     ccs = ccs.slice(page.value * pagesize.value, page.value * pagesize.value + (pagesize.value * 2))
 
   return ccs
 })
-
 
 
 /* on reload get old page position */
@@ -197,6 +193,112 @@ watch(gen, async (newgen, oldgen) => {
   fetchCards()
   page.value = 0
 })
+
+
+/* loader management */
+const isLoaderOpen = ref(false)
+const userStore = useUserStore()
+const pulseLoader = ref(false)
+
+const toggleLoader = () => {
+  isLoaderOpen.value = !isLoaderOpen.value
+}
+
+const closeLoader = () => {
+  isLoaderOpen.value = false
+}
+
+const openLoader = () => {
+  isLoaderOpen.value = true
+}
+
+const newCardOrder = ref(null)
+
+const addCardPosition = (order) => {
+  openLoader()
+  if(newCardOrder.value) pulser()
+  newCardOrder.value = order
+  console.log('add card at ' + newCardOrder.value)
+}
+
+const pulser = () => {
+  pulseLoader.value = true;
+  setTimeout(() => {
+    pulseLoader.value = false;
+  }, 300);
+}
+
+const addCard = async (card) => {
+  if (!userStore.currentId) {
+    alert('Prima carica un profilo!')
+    return false
+  }
+
+  if (!binderStore.currentBinder) {
+    alert('Prima scegli un binder!')
+    return false
+  }
+
+  let insertOrder = binderStore.lastBinderOrder + 1
+  if (newCardOrder.value) {
+    insertOrder = newCardOrder.value
+  }
+
+  if (newCardOrder.value) {
+    console.log('update all cards from binder ' + binderStore.currentBinder + ' from position ' + insertOrder)
+    try {
+      const { data, error } = await supabase
+        .rpc('increment_order', {
+          binder_id: binderStore.currentBinder,
+          min_order: insertOrder
+        });
+
+      if (error) throw error
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  if (card.type == 'card') {
+    //console.log('add card', insertOrder)
+    try {
+      const { data, error } = await supabase
+        .from('cards')
+        .insert({ url: card.maincard, alturl: card.altcard, pokemon: card.pokemonNumber, binder: card.binder, order: insertOrder })
+        .select();
+
+      //console.log('add card', data)
+      toggleLoader()
+      //binderStore.setLastOrder(binderStore.lastBinderOrder+1)
+
+
+      if (error) throw error
+    } catch (error) {
+      console.log(error)
+    }
+
+  } else {
+    //console.log('add empty', insertOrder)
+    try {
+      const { data, error } = await supabase
+        .from('cards')
+        .insert({ url: '', alturl: '', pokemon: null, binder: card.binder, order: insertOrder })
+        .select();
+
+      //console.log('add empty slot', data)
+      toggleLoader()
+      //binderStore.setLastOrder(binderStore.lastBinderOrder+1)
+
+      if (error) throw error
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  newCardOrder.value = null
+  fetchCards()
+}
+
 
 /* preview management */
 const isPreviewOpen = ref(false)
@@ -227,11 +329,11 @@ const closePreview = () => {
 }
 
 const compilePreview = () => {
-  if(!isMobile.value) {
+  if (!isMobile.value) {
     let t = event.target
-    if(t.classList.contains('card')) {
+    if (t.classList.contains('card')) {
       previewRef.value.style.opacity = 1
-      if(t.classList.contains('fixed'))
+      if (t.classList.contains('fixed'))
         previewRef.value.setAttribute('src', t.querySelector('.altcard').getAttribute('src'))
       else
         previewRef.value.setAttribute('src', t.querySelector('.maincard').getAttribute('src'))
@@ -248,6 +350,7 @@ const isOpenEditor = ref(false)
 const openEditor = (card) => {
   isOpenEditor.value = true
   store.setEditing(card)
+  console.log(card)
 }
 
 const closeEditor = (card) => {
@@ -265,12 +368,13 @@ const fetchCards = async () => {
       .from('cards')
       .select()
       .eq('binder', binderStore.currentBinder)
-      .order('id', { ascending: true });
+      .order('order', { ascending: true });
 
     //console.log('fetch cards', data)
     fetchedCards.value = data
 
-    //console.log(fetchedCards.value, data)
+    //console.log(fetchedCards.value[data.length-1].order)
+    binderStore.setLastOrder(fetchedCards.value[data.length-1].order)
 
     if (error) throw error
   } catch (error) {
@@ -348,7 +452,7 @@ const deleteCard = async (c) => {
 
 .buttons {
   grid-area: pages;
-  margin: auto 0 0 0 ;
+  margin: auto 0 0 0;
 
   display: flex;
   justify-content: space-between;
@@ -361,6 +465,7 @@ const deleteCard = async (c) => {
     border: none;
   }
 }
+
 @media (min-width: 1024px) {
   .buttons {
     position: absolute;
@@ -380,10 +485,11 @@ const deleteCard = async (c) => {
   max-height: 10svh;
   padding: 0 1rem;
 
-  > .field {
+  >.field {
     height: 100%;
   }
 }
+
 @media (min-width: 1024px) {
   .options {
     position: absolute;
@@ -401,14 +507,19 @@ const deleteCard = async (c) => {
   display: flex;
   flex-direction: column;
   gap: .25rem;
+
   label {
-    font-size: .9em;
+    font-size: $labelSize;
     color: $pokeyellow;
   }
 }
+
 @media (min-width: 1024px) {
   .field {
     width: 100%;
+    label {
+      font-size: $labelSize-lg;
+    }
   }
 }
 
@@ -450,7 +561,7 @@ const deleteCard = async (c) => {
     }
   }
 
-  
+
 }
 
 .preview {
@@ -466,7 +577,7 @@ const deleteCard = async (c) => {
     height: 100svh;
     background-color: rgba(0, 0, 0, .7);
 
-    > img {
+    >img {
       height: calc(100% - 2rem);
       width: calc(100% - 2rem);
       object-fit: contain;
@@ -488,6 +599,7 @@ const deleteCard = async (c) => {
     left: 1rem;
   }
 }
+
 @media (min-width: 1024px) {
   .preview {
     position: absolute;
@@ -500,7 +612,7 @@ const deleteCard = async (c) => {
     transition: all 500ms ease;
     display: block;
     pointer-events: none;
-    
+
     img {
       width: 100%;
       height: 100%;
@@ -534,14 +646,26 @@ input {
   border-radius: 3rem;
   background-color: $lightgray;
   color: $pokeblue;
-  font-size: .9em;
+  font-size: $labelSize;
   border: none;
   padding: .5rem 1rem;
+
+  &.cancel {
+    background-color: $pokeyellow;
+  }
 }
+
+@media (min-width: 1024px) {
+  .formbutton {
+    font-size: $labelSize-lg;
+  }
+}
+
 
 .radios {
   display: flex;
   gap: .5rem;
+
   .radio {
     display: flex;
     gap: 0;
@@ -574,7 +698,7 @@ input {
   height: calc(90svh - 1.5rem);
   padding: 1rem;
   margin: 0 .5rem;
-  
+
   pointer-events: none;
   opacity: 0;
   background-color: $pokeblue;
@@ -597,6 +721,13 @@ input {
     font-size: 1em;
   }
 }
+
+.interface.pulse.open {
+  opacity: .5;
+  pointer-events: none;
+  transition: all 300ms ease;
+}
+
 @media (min-width: 1024px) {
   .interface {
     width: fit-content;
@@ -604,10 +735,60 @@ input {
     right: -10%;
     translate: 0 0;
     top: 2rem;
+
     &.open {
       top: 2rem;
       right: 2rem;
     }
+  }
+}
+
+
+/* autocomplete */
+.autocomplete {
+  position: relative;
+
+  input {
+    width: 100%;
+  }
+
+  .label {
+    align-items: baseline;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .label span {
+    color: #fff;
+    font-size: 1em;
+  }
+
+  .suggestions {
+    color: #fff;
+    position: absolute;
+    top: calc(100% + .5rem);
+    left: 0;
+    right: 0;
+    background: #666;
+    border-radius: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+}
+
+.suggestions li {
+  padding: .25rem .5rem;
+  font-size: $labelSize;
+}
+
+@media (min-width: 1024px) {
+  .suggestions li {
+    font-size: $labelSize-lg;
   }
 }
 </style>
