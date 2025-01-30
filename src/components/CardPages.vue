@@ -20,17 +20,13 @@
         <button v-if="!props.hidebuttons" class="button delete" @click="emit('delete-card', c)/* deleteCard(c) */">
           <img src="../assets/delete.png" alt="delete">
         </button>
-
         <button v-if="!props.hidebuttons" class="button addleft" @click="emit('add-card-position', c.order)">
           <img src="../assets/add.png" alt="add left">
         </button>
-
         <button v-if="!props.hidebuttons" class="button addright" @click="emit('add-card-position', c.order+1)">
           <img src="../assets/add.png" alt="add right">
         </button>
-
         <!-- <div v-if="!props.hidebuttons" class="button order">{{ c.order }}</div> -->
-
       </div>
     </div>
 
@@ -53,7 +49,13 @@
         <button v-if="!props.hidebuttons" class="button delete" @click="emit('delete-card', c)/* deleteCard(c) */">
           <img src="../assets/delete.png" alt="delete">
         </button>
-
+        <button v-if="!props.hidebuttons" class="button addleft" @click="emit('add-card-position', c.order)">
+          <img src="../assets/add.png" alt="add left">
+        </button>
+        <button v-if="!props.hidebuttons" class="button addright" @click="emit('add-card-position', c.order+1)">
+          <img src="../assets/add.png" alt="add right">
+        </button>
+        <!-- <div v-if="!props.hidebuttons" class="button order">{{ c.order }}</div> -->
       </div>
     </div>
 
@@ -76,7 +78,13 @@
         <button v-if="!props.hidebuttons" class="button delete" @click="emit('delete-card', c)/* deleteCard(c) */">
           <img src="../assets/delete.png" alt="delete">
         </button>
-
+        <button v-if="!props.hidebuttons" class="button addleft" @click="emit('add-card-position', c.order)">
+          <img src="../assets/add.png" alt="add left">
+        </button>
+        <button v-if="!props.hidebuttons" class="button addright" @click="emit('add-card-position', c.order+1)">
+          <img src="../assets/add.png" alt="add right">
+        </button>
+        <!-- <div v-if="!props.hidebuttons" class="button order">{{ c.order }}</div> -->
       </div>
     </div>
 
