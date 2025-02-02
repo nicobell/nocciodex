@@ -348,6 +348,7 @@ const compilePreview = () => {
 const isOpenEditor = ref(false)
 
 const openEditor = (card) => {
+  console.log(card)
   isOpenEditor.value = true
   store.setEditing(card)
   console.log(card)

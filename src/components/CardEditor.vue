@@ -40,6 +40,11 @@
 
     <div class="label">Pokedex number <span>{{ pokemonNumber }}</span></div>
 
+    <div class="checkbox">  
+      <input type="checkbox" name="gotit" id="gotit" v-model="gotcard">
+      <label for="gotit">Already have</label>
+    </div>
+
     <button class="formbutton add" @click="editCard">Edit card</button>
     <button class="formbutton cancel" @click="emit('close-editor')">Cancel</button>
   </div>
@@ -59,6 +64,7 @@ const isMobile = computed(() => window.innerWidth < 1024)
 
 const maincard = ref('')
 const altcard = ref('')
+const gotcard = ref(false) 
 
 const emit = defineEmits(['edit-card', 'close-editor'])
 
@@ -89,9 +95,12 @@ const toggleSuggestions = (state) => {
 
 const editCard = async () => {
   try {
+
+    console.log(gotcard.value)
+
     const { data, error } = await supabase
       .from('cards')
-      .update({ url: maincard.value, alturl: altcard.value, pokemon: pokemonNumber.value })
+      .update({ url: maincard.value, alturl: altcard.value, pokemon: pokemonNumber.value, gotit: gotcard.value })
       .eq('id', store.editingCard.id)
       .select();
 
@@ -114,6 +123,7 @@ watch(openWatcher, async (newvalue, oldvalue) => {
   if (newvalue) {
     maincard.value = store.editingCard.url
     altcard.value = store.editingCard.alturl
+    gotcard.value = store.editingCard.gotit
     if (store.editingCard.pokemon)
       selectPokemon(store.pokemons.find(p => p.pokedex_number == store.editingCard.pokemon))
   } else {
@@ -121,6 +131,7 @@ watch(openWatcher, async (newvalue, oldvalue) => {
     altcard.value = ''
     pokemonName.value = ''
     pokemonNumber.value = null
+    gotcard.value = false
   }
 })
 
@@ -137,6 +148,7 @@ watch(currentCard, async (newvalue, oldvalue) => {
   if (newvalue) {
     maincard.value = store.editingCard.url
     altcard.value = store.editingCard.alturl
+    gotcard.value = store.editingCard.gotit
     if (store.editingCard.pokemon)
       selectPokemon(store.pokemons.find(p => p.pokedex_number == store.editingCard.pokemon))
   } else {
@@ -144,6 +156,7 @@ watch(currentCard, async (newvalue, oldvalue) => {
     altcard.value = ''
     pokemonName.value = ''
     pokemonNumber.value = null
+    gotcard.value = false
   }
 })
 

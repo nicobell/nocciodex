@@ -5,7 +5,7 @@
       <div class="card" v-for="(c, i) in props.cards.slice(0,props.ncolumns<5?props.cards.length:9)" @click="fixAlt(c)">
 
         <div v-if="!c.url.length" class="empty"></div>
-        <img v-if="c.url.length" class="maincard" :src="c.url" alt="">
+        <img v-if="c.url.length" :class="['maincard', { 'have': c.gotit}]" :src="c.url" alt="">
         <img v-if="c.alturl.length" class="altcard" :src="c.alturl" alt="">
 
         <div v-if="c.alturl.length && !props.hidebuttons" class="button alt">
@@ -173,6 +173,10 @@ const fixAlt = (card) => {
   .card .maincard {
     position: relative;
     z-index: 1;
+  }
+
+  .card .maincard.have {
+    filter: grayscale(1);
   }
 
   .card .altcard {
