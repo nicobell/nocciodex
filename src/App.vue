@@ -2,7 +2,7 @@
   <div class="wrapper" @mousemove="compilePreview">
 
     <CardPages :cards="pagedCards" :computedcolumns="computedcolumns" :ncolumns="ncolumns" :page="page"
-      :hidebuttons="hideButtons" :isMobile="isMobile" @open-editor="openEditor" @open-preview="openPreview"
+      :hidebuttons="hideButtons" :seeMissing="seeMissing" :isMobile="isMobile" @open-editor="openEditor" @open-preview="openPreview"
       @delete-card="deleteCard" @add-card-position="addCardPosition" />
 
     <div class="buttons">
@@ -46,6 +46,10 @@
         <div class="checkbox">
           <input type="checkbox" v-model="hideButtons" id="hide" name="hide">
           <label for="hide">Hide buttons</label>
+        </div>
+        <div class="checkbox">
+          <input type="checkbox" v-model="seeMissing" id="possession" name="possession">
+          <label for="possession">See missing</label>
         </div>
       </div>
 
@@ -112,6 +116,7 @@ const isMobile = computed(() => window.innerWidth < 1024)
 /* visuals */
 const fill = ref(false)
 const hideButtons = ref(false)
+const seeMissing = ref(false)
 const ncolumns = ref(3)
 const pagesize = computed(() => { return ncolumns.value < 5 ? ncolumns.value * 3 : 9 })
 

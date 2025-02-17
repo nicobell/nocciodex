@@ -5,7 +5,7 @@
       <div class="card" v-for="(c, i) in props.cards.slice(0,props.ncolumns<5?props.cards.length:9)" @click="fixAlt(c)">
 
         <div v-if="!c.url.length" class="empty"></div>
-        <img v-if="c.url.length" :class="['maincard', { 'have': c.gotit}]" :src="c.url" alt="">
+        <img v-if="c.url.length" :class="['maincard', { 'have': c.gotit && props.seeMissing }]" :src="c.url" alt="">
         <img v-if="c.alturl.length" class="altcard" :src="c.alturl" alt="">
 
         <div v-if="c.alturl.length && !props.hidebuttons" class="button alt">
@@ -14,7 +14,7 @@
         <button v-if="!props.hidebuttons" class="button edit" @click="emit('open-editor', c)/* openEditor(c) */">
           <img src="../assets/edity.png" alt="edit">
         </button>
-        <button v-if="c.url.length && !props.hidebuttons && props.isMobile" class="button eye" @click="emit('open-preview', c)/* openPreview(c) */">
+        <button v-if="c.url.length && props.isMobile" class="button eye" @click="emit('open-preview', c)/* openPreview(c) */">
           <img src="../assets/eye.png" alt="preview">
         </button>
         <button v-if="!props.hidebuttons" class="button delete" @click="emit('delete-card', c)/* deleteCard(c) */">
@@ -34,7 +34,7 @@
       <div class="card" v-for="(c, i) in props.cards.slice(0, 9)" @click="fixAlt(c)">
 
         <div v-if="!c.url.length" class="empty"></div>
-        <img v-if="c.url.length" class="maincard" :src="c.url" alt="">
+        <img v-if="c.url.length" :class="['maincard', { 'have': c.gotit && props.seeMissing }]" :src="c.url" alt="">
         <img v-if="c.alturl.length" class="altcard" :src="c.alturl" alt="">
 
         <div v-if="c.alturl.length && !props.hidebuttons" class="button alt">
@@ -43,7 +43,7 @@
         <button v-if="!props.hidebuttons" class="button edit" @click="emit('open-editor', c)/* openEditor(c) */">
           <img src="../assets/edity.png" alt="edit">
         </button>
-        <button v-if="c.url.length && !props.hidebuttons && props.isMobile" class="button eye" @click="emit('open-preview', c)/* openPreview(c) */">
+        <button v-if="c.url.length && props.isMobile" class="button eye" @click="emit('open-preview', c)/* openPreview(c) */">
           <img src="../assets/eye.png" alt="preview">
         </button>
         <button v-if="!props.hidebuttons" class="button delete" @click="emit('delete-card', c)/* deleteCard(c) */">
@@ -63,7 +63,7 @@
       <div class="card" v-for="(c, i) in props.cards.slice(9, props.cards.length)" @click="fixAlt(c)">
 
         <div v-if="!c.url.length" class="empty"></div>
-        <img v-if="c.url.length" class="maincard" :src="c.url" alt="">
+        <img v-if="c.url.length" :class="['maincard', { 'have': c.gotit && props.seeMissing }]" :src="c.url" alt="">
         <img v-if="c.alturl.length" class="altcard" :src="c.alturl" alt="">
 
         <div v-if="c.alturl.length && !props.hidebuttons" class="button alt">
@@ -72,7 +72,7 @@
         <button v-if="!props.hidebuttons" class="button edit" @click="emit('open-editor', c)/* openEditor(c) */">
           <img src="../assets/edity.png" alt="edit">
         </button>
-        <button v-if="c.url.length && !props.hidebuttons && props.isMobile" class="button eye" @click="emit('open-preview', c)/* openPreview(c) */">
+        <button v-if="c.url.length && props.isMobile" class="button eye" @click="emit('open-preview', c)/* openPreview(c) */">
           <img src="../assets/eye.png" alt="preview">
         </button>
         <button v-if="!props.hidebuttons" class="button delete" @click="emit('delete-card', c)/* deleteCard(c) */">
@@ -94,7 +94,7 @@
 <script setup>
 
 const emit = defineEmits(['open-preview', 'delete-card', 'open-editor', 'add-card-position'])
-const props = defineProps(['cards', 'hidebuttons', 'computedcolumns', 'ncolumns', 'isMobile', 'page'])
+const props = defineProps(['cards', 'hidebuttons', 'seeMissing', 'computedcolumns', 'ncolumns', 'isMobile', 'page'])
 
 /* fix card second option */
 const fixAlt = (card) => {
