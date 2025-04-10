@@ -88,7 +88,8 @@ const loadBinders = async () => {
       .eq('user', userStore.currentId);
 
     binderStore.loadBinders(data)
-    binderStore.selectBinder(data[0].id)
+    //binderStore.selectBinder(data[0].id)
+    binderStore.selectBinder(18)
     emit('select-binder')
     
     if (error) throw error
@@ -139,7 +140,7 @@ async function getPokemons() {
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/variables.scss" as *;
+@use "@/style/variables.scss" as *;
 
 .wrapper {
   position: relative;

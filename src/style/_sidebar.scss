@@ -1,0 +1,19 @@
+
+.options {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 5vw 2.5vw;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .checkbox {
+    display: flex;
+    gap: .5rem;
+  }
+}

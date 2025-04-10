@@ -1,0 +1,39 @@
+.wrapper {
+	/*   display: flex;
+  gap: 1rem;
+  height: 100svh;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 1rem; */
+
+	height: 100svh;
+	width: 100vw;
+
+	margin: 0;
+	padding: 0;
+
+	display: grid;
+	grid-template-areas:
+		'side main'
+		'side bottom';
+	grid-template-columns: 1fr 4fr;
+	grid-template-rows: 5fr 1fr;
+}
+
+/* @media (min-width: 1024px) {
+	.wrapper {
+		padding: 0;
+	}
+} */
+
+.binder-wrapper {
+	grid-area: main;
+}
+
+.buttons {
+	grid-area: bottom;
+}
+
+.options {
+	grid-area: side;
+}
