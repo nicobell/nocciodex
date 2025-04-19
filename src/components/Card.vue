@@ -39,6 +39,8 @@ const props = defineProps(['card', 'missing'])
   .empty {
     width: $cardw;
     height: calc($cardw * 88 / 63.5);
+    max-height: unset;
+    max-width: unset;
   }
 }
 
