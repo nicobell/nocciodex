@@ -11,8 +11,6 @@ const props = defineProps(['card', 'missing'])
 </script>
 
 <style scoped lang="scss">
-@import "../style/variables";
-
 .card,
 .empty {
   aspect-ratio: calc(63.5/88);

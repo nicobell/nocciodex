@@ -1,34 +1,12 @@
 <template>
   <div class="wrapper">
-    <!-- @mousemove="compilePreview" -->
-
-    <!-- <CardPages :cards="pagedCards" :computedcolumns="computedcolumns" :ncolumns="ncolumns" :page="page"
-      :hidebuttons="hideButtons" :seeMissing="seeMissing" :isMobile="isMobile" @open-editor="openEditor"
-      @delete-card="deleteCard" @add-card-position="addCardPosition" /> -->
-    <!-- @open-preview="openPreview" -->
-
     <Binder :missing="seeMissing" :fill="fill" :page="page" :animation="flipping" :direction="flipDirection" />
 
     <div class="buttons">
-      <!-- <div v-if="isMobile" class="field columns">
-        <label for="ncolumns">Columns</label>
-        <div class="radios">
-          <div :class="{ 'radio': true, 'active': ncolumns == 3 }">
-            <input name="ncolumns" id="pp3" type="radio" v-model="ncolumns" value="3">
-            <label for="pp3">3</label>
-          </div>
-          <div :class="{ 'radio': true, 'active': ncolumns == 4 }">
-            <input name="ncolumns" id="pp4" type="radio" v-model="ncolumns" value="4">
-            <label for="pp4">4</label>
-          </div>
-        </div>
-      </div> -->
-
       <button :disabled="page <= 0 || flipping" @click="swipePage('first')">&lt;&lt;</button>
       <button :disabled="page <= 0 || flipping" @click="swipePage('left')">&lt;</button>
       <div><span style="color: #fff;">Pag {{ parseInt(page) + 1 }}</span></div>
       <button :disabled="disableNext || flipping" @click="swipePage('right')">&gt;</button>
-      <!-- <button @click="swipePage('last')">&gt;&gt;</button> -->
     </div>
 
     <div class="options">
@@ -39,7 +17,7 @@
         <button @click="loadUser">login</button>
       </div>
 
-      <div v-if="userStore.currentId">Logged in as <span style="color: yellow">{{ userStore.currentUser }}</span></div>
+      <div v-if="userStore.currentId">Logged in as <span class="username">{{ userStore.currentUser }}</span></div>
 
       <div class="field">
         <label for="generation">Binder</label>
@@ -69,48 +47,11 @@
         </div>
       </div>
 
-      <!-- <div v-if="!isMobile" class="field columns">
-        <label for="ncolumns">Columns</label>
-        <div class="radios">
-          <div :class="{ 'radio': true, 'active': ncolumns == 3 }">
-            <label for="pp3">3</label>
-            <input name="ncolumns" id="pp3" type="radio" v-model="ncolumns" value="3">
-          </div>
-          <div :class="{ 'radio': true, 'active': ncolumns == 4 }">
-            <label for="pp4">4</label>
-            <input name="ncolumns" id="pp4" type="radio" v-model="ncolumns" value="4">
-          </div>
-          <div :class="{ 'radio': true, 'active': ncolumns == 5 }">
-            <label for="pp5">2P</label>
-            <input name="ncolumns" id="pp5" type="radio" v-model="ncolumns" value="5">
-          </div>
-        </div>
-      </div> -->
-
+      <CardLoader @add-card="addCard" />
 
     </div>
 
-
-
-    <!-- <CardLoader :isOpen="isLoaderOpen" :pulse="pulseLoader" @add-card="addCard" @toggle-loader="toggleLoader"
-        @close-loader="closeLoader" @add-card="fetchCards"/>
-      
-
-      <BinderEditor @select-binder="gen = binderStore.currentBinder" /> -->
-
-    <!-- <div :class="{ 'preview': true, 'open': isPreviewOpen }" @click="closePreview">
-      <div v-if="isMobile" class="operations">
-        <button class="button edit" @click="openEditor(currentPreview)">
-          <img src="./assets/edity.png" alt="">
-        </button>
-        <button class="button delete" @click="deleteCard(currentPreview)">
-          <img src="./assets/delete.png" alt="">
-        </button>
-      </div>
-      <img ref="preview" src="" alt="">
-    </div> -->
-
-    <!-- <CardEditor :isOpen="isOpenEditor" @edit-card="closeEditor()" @close-editor="closeEditor()" /> -->
+    <a href="https://github.com/nicobell" target="_blank" class="firma">github.com/nicobell</a>
 
   </div>
 </template>
@@ -122,10 +63,13 @@ import { useBinderStore } from './stores/binders'
 import { supabase } from './lib/supabaseClient'
 import Binder from './components/Binder.vue'
 import { useCardsStore } from './stores/cards'
+import CardLoader from './components/CardLoader.vue'
+import { useStore } from './stores/data'
 
 const userStore = useUserStore()
 const binderStore = useBinderStore()
 const cardsStore = useCardsStore()
+const store = useStore()
 
 const isMobile = computed(() => {
   return window.innerWidth < 1200
@@ -134,7 +78,7 @@ const isMobile = computed(() => {
 /* -------------------------------------------- */
 const user = ref('')
 
-const loadUser = async () => {
+async function loadUser() {
   try {
     const { data, error } = await supabase
       .from('users')
@@ -146,7 +90,7 @@ const loadUser = async () => {
     userStore.loadUser(data[0].username, data[0].id)
 
   } catch (error) {
-    //console.log(error)
+    console.log(error)
   }
 
   loadBinders()
@@ -157,7 +101,7 @@ const loadUser = async () => {
 /* -------------------------------------------- */
 const gen = ref(1)
 
-const loadBinders = async () => {
+async function loadBinders() {
   try {
     const { data, error } = await supabase
       .from('binders')
@@ -168,21 +112,12 @@ const loadBinders = async () => {
     if (error) throw error
 
     binderStore.loadBinders(data)
-    //gen.value = data[0].id
-    gen.value = 18
+    gen.value = data[0].id
 
   } catch (error) {
     console.log(error)
   }
 }
-
-onMounted(() => {
-  const logged = localStorage.getItem('currentUser')
-  if (logged) {
-    user.value = logged
-    loadUser()
-  }
-})
 
 watch(gen, async (newgen, oldgen) => {
   binderStore.selectBinder(newgen)
@@ -191,11 +126,32 @@ watch(gen, async (newgen, oldgen) => {
 })
 
 /* -------------------------------------------- */
+async function getPokemons() {
+  const { data } = await supabase
+    .from('pokemons')
+    .select();
+
+  store.loadPokemons(data)
+}
+
+/* -------------------------------------------- */
+onMounted(() => {
+  getPokemons()
+
+  const logged = localStorage.getItem('currentUser')
+
+  if (logged) {
+    user.value = logged
+    loadUser()
+  }
+})
+
+/* -------------------------------------------- */
 const page = ref(0)
 const flipping = ref(false)
 const flipDirection = ref('')
 
-const swipePage = async (dir) => {
+async function swipePage(dir) {
   flipping.value = true
   flipDirection.value = dir
 
@@ -223,13 +179,15 @@ const swipePage = async (dir) => {
 
 const disableNext = computed(() => {
   if (cardsStore.cards.length) {
-    const l = cardsStore.cards
-      .find(el => el.binder == binderStore.currentBinder)
-      .data
-      .filter(el => !fill.value || el.url)
-      .length
+    const found = cardsStore.cards.find(el => el.binder == binderStore.currentBinder)
+    let l = 0
+    if (found)
+      l = found
+        .data
+        .filter(el => !fill.value || el.url)
+        .length
 
-    if(!isMobile.value)
+    if (!isMobile.value)
       return l < 18 * (page.value / 2 + 1)
     else
       return l < 9 * (page.value + 1)
@@ -240,54 +198,23 @@ const disableNext = computed(() => {
 const seeMissing = ref(false)
 const fill = ref(false)
 
-//const isMobile = computed(() => window.innerWidth < 1024)
-/* const hideButtons = ref(false)
-const seeMissing = ref(false)
-const ncolumns = ref(3)
-const pagesize = computed(() => { return ncolumns.value < 5 ? ncolumns.value * 3 : 9 }) */
+/* -------------------------------------------- */
+const isLoaderOpen = ref(false)
 
-
-/* const computedcolumns = computed(() => {
-  let s = ''
-  for (let i = 0; i < ncolumns.value; i++)
-    s += ' 1fr'
-  return s
-}) */
-
-/* loader management */
-/* const isLoaderOpen = ref(false)
-const userStore = useUserStore()
-const pulseLoader = ref(false)
-
-const toggleLoader = () => {
+function toggleLoader() {
   isLoaderOpen.value = !isLoaderOpen.value
 }
-
-const closeLoader = () => {
+function closeLoader() {
   isLoaderOpen.value = false
 }
-
-const openLoader = () => {
+function openLoader() {
   isLoaderOpen.value = true
-} */
-
-/* const newCardOrder = ref(null)
-
-const addCardPosition = (order) => {
-  openLoader()
-  if (newCardOrder.value) pulser()
-  newCardOrder.value = order
-  console.log('add card at ' + newCardOrder.value)
 }
 
-const pulser = () => {
-  pulseLoader.value = true;
-  setTimeout(() => {
-    pulseLoader.value = false;
-  }, 300);
-}
+/* -------------------------------------------- */
+//const newCardOrder = ref(null)
 
-const addCard = async (card) => {
+async function addCard(card, newCardOrder = null) {
   if (!userStore.currentId) {
     alert('Prima carica un profilo!')
     return false
@@ -299,7 +226,7 @@ const addCard = async (card) => {
   }
 
   let insertOrder = binderStore.lastBinderOrder + 1
-  if (newCardOrder.value) {
+  /* if (newCardOrder.value) {
     insertOrder = newCardOrder.value
   }
 
@@ -316,7 +243,7 @@ const addCard = async (card) => {
     } catch (error) {
       console.log(error)
     }
-  }
+  } */
 
   if (card.type == 'card') {
     //console.log('add card', insertOrder)
@@ -327,9 +254,8 @@ const addCard = async (card) => {
         .select();
 
       //console.log('add card', data)
-      toggleLoader()
-      //binderStore.setLastOrder(binderStore.lastBinderOrder+1)
-
+      //toggleLoader()
+      binderStore.setLastOrder(binderStore.lastBinderOrder + 1)
 
       if (error) throw error
     } catch (error) {
@@ -345,8 +271,8 @@ const addCard = async (card) => {
         .select();
 
       //console.log('add empty slot', data)
-      toggleLoader()
-      //binderStore.setLastOrder(binderStore.lastBinderOrder+1)
+      //toggleLoader()
+      binderStore.setLastOrder(binderStore.lastBinderOrder + 1)
 
       if (error) throw error
     } catch (error) {
@@ -354,8 +280,15 @@ const addCard = async (card) => {
     }
   }
 
-  newCardOrder.value = null
-  fetchCards()
+  //newCardOrder.value = null
+  cardsStore.refreshCards()
+}
+
+/* const addCardPosition = (order) => {
+  openLoader()
+  //if (newCardOrder.value) pulser()
+  newCardOrder.value = order
+  console.log('add card at ' + newCardOrder.value)
 } */
 
 
@@ -421,4 +354,22 @@ const closeEditor = (card) => {
 
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.firma {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  color: $lightgray;
+  opacity: .2;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    opacity: .5;
+  }
+}
+
+.username {
+  color: $accent;
+}
+</style>

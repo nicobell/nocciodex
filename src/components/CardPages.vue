@@ -101,8 +101,6 @@ const fixAlt = (card) => {
 </script>
 
 <style scoped lang="scss">
-@use "@/style/variables.scss" as *;
-
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

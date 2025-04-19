@@ -1,13 +1,13 @@
 <template>
   <div :class="{ 'loader': true, 'mobile': isMobile }">
 
-    <button :class="{ 'loaderbutton': true, 'addcard': true, 'close': isOpen }" @click="toggleLoader">
+    <!-- <button :class="{ 'loaderbutton': true, 'addcard': true, 'close': isOpen }" @click="toggleLoader">
       <img src="../assets/card.png" alt="">
-    </button>
+    </button> -->
 
-    <div :class="{ 'interface': true, 'open': isOpen, 'pulse': props.pulse }">
+    <div :class="{ 'interface': true, 'open': isOpen }">
 
-      <div>Select card or empty slot</div>
+      <div>Type</div>
 
       <div class="radios">
         <div :class="['radio', { 'active': type == 'card' }]">
@@ -57,14 +57,13 @@ import { supabase } from '@/lib/supabaseClient';
 import { useBinderStore } from '@/stores/binders';
 import { useStore } from '@/stores/data';
 import { useUserStore } from '@/stores/users';
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 //const isOpen = ref(false)
 const store = useStore()
-const userStore = useUserStore()
 const binderStore = useBinderStore()
 const emit = defineEmits(['add-card', 'toggle-loader', 'close-loader'])
-const props = defineProps(['isOpen', 'pulse'])
+const props = defineProps(['isOpen'])
 
 const isMobile = computed(() => window.innerWidth < 1024)
 
@@ -77,6 +76,9 @@ const toggleLoader = () => {
   emit('toggle-loader')
 }
 
+/* onMounted(() => {
+  console.log(store.pokemons)
+}) */
 
 
 // Campo di input con v-model

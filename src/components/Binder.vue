@@ -17,7 +17,8 @@
       <BinderPage :cards="(props.animation && props.direction == 'first') ? rightCardsFirst : rightCardsPrev"
         class="right-page-back" />
     </div>
-    <div v-if="!isMobile" :class="['flip-helper', 'right', (props.animation && props.direction == 'right') ? 'flipping' : '']"
+    <div v-if="!isMobile"
+      :class="['flip-helper', 'right', (props.animation && props.direction == 'right') ? 'flipping' : '']"
       :missing="props.missing">
       <BinderPage :cards="leftCardsNext" class="left-page-back" />
     </div>
@@ -37,7 +38,7 @@
 import { useCardsStore } from '@/stores/cards';
 import BinderPage from './BinderPage.vue';
 import { useBinderStore } from '@/stores/binders';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps(['page', 'animation', 'direction', 'fill', 'missing'])
 const cardsStore = useCardsStore()
@@ -55,14 +56,15 @@ const mobilePageCards = computed(() => {
 
 const filteredCards = computed(() => {
   if (cardsStore.cards.length) {
-    return cardsStore.cards.find(el => el.binder == binderStore.currentBinder).data.filter(el => !props.fill || el.url)
+    const found = cardsStore.cards.find(el => el.binder == binderStore.currentBinder)
+    if(found) return found.data.filter(el => !props.fill || el.url)
+    else return []
   } else return []
 })
 
 function pie(p) {
   return (props.page + p) * pageDimension.value //+ pageOffset.value
 }
-
 
 const leftCards = computed(() => {
   return filteredCards.value.slice(pie(0), pie(1))
@@ -72,8 +74,6 @@ const rightCards = computed(() => {
   return filteredCards.value.slice(pie(1), pie(2))
 })
 
-
-
 const leftCardsNext = computed(() => {
   return filteredCards.value.slice(pie(2), pie(3))
 })
@@ -82,17 +82,13 @@ const rightCardsNext = computed(() => {
   return filteredCards.value.slice(pie(3), pie(4))
 })
 
-
-
 const leftCardsPrev = computed(() => {
-  return filteredCards.value.slice(pie(-1), pie(-1))
+  return filteredCards.value.slice(pie(-2), pie(-1))
 })
 
 const rightCardsPrev = computed(() => {
   return filteredCards.value.slice(pie(-1), pie(0))
 })
-
-
 
 const leftCardsFirst = computed(() => {
   return filteredCards.value.slice(0, pageDimension.value)
@@ -101,12 +97,9 @@ const leftCardsFirst = computed(() => {
 const rightCardsFirst = computed(() => {
   return filteredCards.value.slice(pageDimension.value, 2 * pageDimension.value)
 })
-
 </script>
 
 <style scoped lang="scss">
-@import "../style/variables";
-
 $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
 
 .binder-wrapper {
@@ -120,7 +113,7 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
 @media (min-width: 1200px) {
   .binder-wrapper {
     position: relative;
-    margin: 5rem 5rem 0 0;
+    margin: 4vw 4vw 0 0;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -131,14 +124,12 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
 .binder {
   display: flex;
   flex-direction: row;
-  width: calc((3 * $cardwm) + (4 * .75rem));
   margin: .75rem auto;
 }
 
 @media (min-width: 1200px) {
   .binder {
     margin: 0;
-    width: $binderwidth;
   }
 }
 
@@ -195,7 +186,6 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
 .backpage {
   position: absolute;
   z-index: 0;
-  width: calc($binderwidth / 2);
   top: 0;
 
   &.right {
@@ -205,23 +195,16 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
   &.left {
     right: calc($binderwidth / 2);
   }
-
-  .page {
-    width: 100%;
-  }
 }
 
 /* backface of main pages while animating */
 .flip-helper.left .right-page-back,
 .flip-helper.right .left-page-back {
-  width: 100%;
   transform-origin: center center;
   scale: -1 1;
 }
 
 .flip-helper {
-  //width: 50%;
-  width: calc($binderwidth / 2);
   position: absolute;
   top: 0;
   z-index: 1;

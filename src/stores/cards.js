@@ -1,44 +1,47 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
-import { useBinderStore } from './binders'
-import { supabase } from '@/lib/supabaseClient'
+import { ref, computed } from "vue";
+import { defineStore } from "pinia";
+import { useBinderStore } from "./binders";
+import { supabase } from "@/lib/supabaseClient";
 
-export const useCardsStore = defineStore('cards', () => {
+export const useCardsStore = defineStore("cards", () => {
+	const cards = ref([]);
+	const binderStore = useBinderStore();
 
-  const cards = ref([])
-  const binderStore = useBinderStore()
+	async function fetchCards() {
+		const found = cards.value.find(
+			(el) => el.binder == binderStore.currentBinder
+		);
 
-  const fetchCards = async () => {
-    const found = cards.value.find(el => el.binder == binderStore.currentBinder)
+		if (!found) {
+			console.log("loading new binder", binderStore.currentBinder);
 
-    if (!found) {
-      console.log('loading new binder', binderStore.currentBinder)
+			try {
+				const { data, error } = await supabase
+					.from("cards")
+					.select()
+					.eq("binder", binderStore.currentBinder)
+					.order("order", { ascending: true });
 
-      try {
-        const { data, error } = await supabase
-          .from('cards')
-          .select()
-          .eq('binder', binderStore.currentBinder)
-          .order('order', { ascending: true });
+				if (error) throw error;
 
-        if (error) throw error
-  
-        cards.value.push({
-          binder: binderStore.currentBinder,
-          data: data
-        })
+				cards.value.push({
+					binder: binderStore.currentBinder,
+					data: data,
+				});
 
-      } catch (error) {
-        console.log(error)
-      }
+				//console.log('last order', data[data.length - 1].order)
+				binderStore.setLastOrder(data[data.length - 1].order);
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			console.log("returning cached binder", found);
+			//console.log('last order', found.data[found.data.length - 1].order)
+			binderStore.setLastOrder(found.data[found.data.length - 1].order);
+		}
+	}
 
-    } else {
-      console.log('returning cached binder', binderStore.currentBinder)
-      return found
-    }
-  }
-  
-  /* const refreshCards = async () => {
+	async function refreshCards() {
     try {
       const { data, error } = await supabase
         .from('cards')
@@ -55,9 +58,9 @@ export const useCardsStore = defineStore('cards', () => {
     } catch (error) {
       console.log(error)
     }
-  } */
-  
-  /* const deleteCard = async (c) => {
+  }
+
+	/* const deleteCard = async (c) => {
     //console.log(c)
     try {
       const { data, error } = await supabase
@@ -75,5 +78,5 @@ export const useCardsStore = defineStore('cards', () => {
     }
   } */
 
-  return { cards, fetchCards }
-})
+	return { cards, fetchCards, refreshCards };
+});

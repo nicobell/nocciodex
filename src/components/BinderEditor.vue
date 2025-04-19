@@ -6,7 +6,6 @@
     </button>
 
     <div :class="{ 'interface': true, 'open': isOpen }">
-
       <div class="userload baseline">
         <p class="label">Current user:</p>
         <p class="title">{{ userStore.currentUser }}</p>
@@ -30,10 +29,9 @@
         <input type="text" v-model="binderName" placeholder="Binder name...">
         <button :disabled="!binderName" class="formbutton create" @click="addBinder()">Add binder</button>
       </div>
-
     </div>
-  </div>
 
+  </div>
 </template>
 
 <script setup>
@@ -42,8 +40,6 @@ import { supabase } from '../lib/supabaseClient'
 import { useUserStore } from '@/stores/users'
 import { useBinderStore } from '@/stores/binders'
 import { useStore } from '@/stores/data';
-
-const isMobile = computed(() => window.innerWidth < 1024)
 
 const userStore = useUserStore()
 const binderStore = useBinderStore()
@@ -54,6 +50,8 @@ const emit = defineEmits(['select-binder'])
 const user = ref(null)
 const binderName = ref(null)
 const isOpen = ref(false)
+
+const isMobile = computed(() => window.innerWidth < 1024)
 
 const toggleLoader = () => {
   isOpen.value = !isOpen.value
@@ -91,7 +89,7 @@ const loadBinders = async () => {
     //binderStore.selectBinder(data[0].id)
     binderStore.selectBinder(18)
     emit('select-binder')
-    
+
     if (error) throw error
   } catch (error) {
     //console.log(error)
@@ -140,8 +138,6 @@ async function getPokemons() {
 </script>
 
 <style scoped lang="scss">
-@use "@/style/variables.scss" as *;
-
 .wrapper {
   position: relative;
   display: flex !important;
@@ -165,5 +161,4 @@ ul {
   padding-left: 1rem;
   list-style: circle;
 }
-
 </style>

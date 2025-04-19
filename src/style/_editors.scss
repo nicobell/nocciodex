@@ -7,7 +7,7 @@
 
   label {
     font-size: $labelSize;
-    color: $pokeyellow;
+    color: $accent;
   }
 }
 
@@ -35,7 +35,7 @@
   height: 100%;
 
   .loaderbutton {
-    background-color: $pokeyellow;
+    background-color: $accent;
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
@@ -86,13 +86,13 @@ input {
 .formbutton {
   border-radius: 3rem;
   background-color: $lightgray;
-  color: $pokeblue;
+  color: $primary;
   font-size: $labelSize;
   border: none;
   padding: .5rem 1rem;
 
   &.cancel {
-    background-color: $pokeyellow;
+    background-color: $accent;
   }
 }
 
@@ -142,7 +142,7 @@ input {
 
   pointer-events: none;
   opacity: 0;
-  background-color: $pokeblue;
+  background-color: $primary;
   color: #fff;
   border-radius: 10px;
   transition: all 500ms ease;
@@ -158,7 +158,7 @@ input {
 
   label,
   .label {
-    color: $pokeyellow;
+    color: $accent;
     font-size: 1em;
   }
 }
