@@ -26,7 +26,7 @@
 
       <button :disabled="page <= 0 || flipping" @click="swipePage('first')">&lt;&lt;</button>
       <button :disabled="page <= 0 || flipping" @click="swipePage('left')">&lt;</button>
-      <div>Pag <span style="color: #fff;">{{ parseInt(page) + 1 }}</span></div>
+      <div><span style="color: #fff;">Pag {{ parseInt(page) + 1 }}</span></div>
       <button :disabled="disableNext || flipping" @click="swipePage('right')">&gt;</button>
       <!-- <button @click="swipePage('last')">&gt;&gt;</button> -->
     </div>
@@ -39,7 +39,7 @@
         <button @click="loadUser">login</button>
       </div>
 
-      <div v-if="userStore.currentId">logged in as <span style="color: yellow">{{ userStore.currentUser }}</span></div>
+      <div v-if="userStore.currentId">Logged in as <span style="color: yellow">{{ userStore.currentUser }}</span></div>
 
       <div class="field">
         <label for="generation">Binder</label>
@@ -90,6 +90,8 @@
 
     </div>
 
+
+
     <!-- <CardLoader :isOpen="isLoaderOpen" :pulse="pulseLoader" @add-card="addCard" @toggle-loader="toggleLoader"
         @close-loader="closeLoader" @add-card="fetchCards"/>
       
@@ -124,6 +126,10 @@ import { useCardsStore } from './stores/cards'
 const userStore = useUserStore()
 const binderStore = useBinderStore()
 const cardsStore = useCardsStore()
+
+const isMobile = computed(() => {
+  return window.innerWidth < 1200
+})
 
 /* -------------------------------------------- */
 const user = ref('')
@@ -162,7 +168,8 @@ const loadBinders = async () => {
     if (error) throw error
 
     binderStore.loadBinders(data)
-    gen.value = data[0].id
+    //gen.value = data[0].id
+    gen.value = 18
 
   } catch (error) {
     console.log(error)
@@ -171,7 +178,7 @@ const loadBinders = async () => {
 
 onMounted(() => {
   const logged = localStorage.getItem('currentUser')
-  if(logged) {
+  if (logged) {
     user.value = logged
     loadUser()
   }
@@ -198,17 +205,17 @@ const swipePage = async (dir) => {
 
     switch (dir) {
       case 'left':
-        page.value -= 2;
+        page.value -= (isMobile ? 1 : 2);
         break;
       case 'right':
-        page.value += 2;
+        page.value += (isMobile ? 1 : 2);
         break;
       case 'first':
         page.value = 0;
         break;
     }
     //document.querySelectorAll('.fixed').forEach(el => el.classList.remove('fixed'))
-  }, 1000);
+  }, isMobile ? 0 : 1000);
 }
 
 const disableNext = computed(() => {
@@ -218,7 +225,11 @@ const disableNext = computed(() => {
       .data
       .filter(el => !fill.value || el.url)
       .length
-    return l < 18 * (page.value / 2 + 1)
+
+    if(!isMobile)
+      return l < 18 * (page.value / 2 + 1)
+    else
+      return l < 9 * (page.value + 1)
   } else return true
 })
 

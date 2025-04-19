@@ -1,19 +1,31 @@
-
 .options {
-  color: white;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 5vw 2.5vw;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	padding: 0;
+	margin: 0.75rem;
+	height: calc(40svh - 3rem);
+	overflow: scroll;
 
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-  }
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
 
-  .checkbox {
-    display: flex;
-    gap: .5rem;
-  }
+	.checkbox {
+		display: flex;
+		gap: 0.5rem;
+	}
+}
+
+@media (min-width: 1200px) {
+	.options {
+		gap: 2rem;
+		padding: 5vw 2.5vw;
+		margin: 0;
+		overflow: unset;
+		height: unset;
+	}
 }

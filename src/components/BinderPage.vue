@@ -16,14 +16,23 @@ const props = defineProps(['cards', 'missing'])
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
-  gap: $cardsgap;
+  gap: .75rem;
 
-  width: 50%;
+  margin: 0 auto;
   height: 100%;
 
-  padding: $pagepadding;
-  
+  padding: .75rem;
+
   border-radius: 10px;
   background-color: #333;
+}
+
+@media (min-width: 1200px) {
+  .page {
+    gap: $cardsgap;
+    padding: $pagepadding;
+    width: 50%;
+    margin: unset;
+  }
 }
 </style>

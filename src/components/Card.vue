@@ -16,8 +16,10 @@ const props = defineProps(['card', 'missing'])
 .card,
 .empty {
   aspect-ratio: calc(63.5/88);
-  width: $cardw;
-  height: $cardw * 88 / 63.5;
+  width: $cardwm;
+  max-width: 160px;
+  height: calc($cardwm * 88 / 63.5);
+  max-height: 20svh;
   border-radius: 10px;
   overflow: hidden;
 
@@ -32,10 +34,17 @@ const props = defineProps(['card', 'missing'])
   }
 }
 
+@media (min-width: 1200px) {
+  .card,
+  .empty {
+    width: $cardw;
+    height: calc($cardw * 88 / 63.5);
+  }
+}
+
 .empty {
   border-right: 1px solid #666;
   border-bottom: 1px solid #666;
   border-radius: 0;
 }
-
 </style>

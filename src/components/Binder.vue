@@ -1,25 +1,34 @@
 <template>
-  <div class="binder-wrapper">
+  <div :class="['binder-wrapper', isMobile ? 'mobile' : '']">
 
-    <div class="binder">
+
+
+    <div v-if="!isMobile" class="binder">
       <BinderPage :cards="leftCards" :missing="props.missing"
         :class="['left-page', (props.animation && (props.direction == 'left' || props.direction == 'first')) ? 'flipping' : '']" />
       <BinderPage :cards="rightCards" :missing="props.missing"
         :class="['right-page', (props.animation && props.direction == 'right') ? 'flipping' : '']" />
     </div>
 
-    <div v-if="props.page > 0" :missing="props.missing"
-      :class="['flip-helper', 'left', (props.animation && (props.direction == 'left' || props.direction == 'first')) ? 'flipping' : '']">
-      <BinderPage :cards="(props.animation && props.direction == 'first') ? rightCardsFirst : rightCardsPrev" class="right-page-back" />
+    <div v-if="isMobile" :class="['binder', isMobile ? 'mobile' : '']">
+      <BinderPage :cards="mobilePageCards" :missing="props.missing" />
     </div>
-    <div :class="['flip-helper', 'right', (props.animation && props.direction == 'right') ? 'flipping' : '']" :missing="props.missing">
+
+    <div v-if="!isMobile && props.page > 0" :missing="props.missing"
+      :class="['flip-helper', 'left', (props.animation && (props.direction == 'left' || props.direction == 'first')) ? 'flipping' : '']">
+      <BinderPage :cards="(props.animation && props.direction == 'first') ? rightCardsFirst : rightCardsPrev"
+        class="right-page-back" />
+    </div>
+    <div v-if="!isMobile" :class="['flip-helper', 'right', (props.animation && props.direction == 'right') ? 'flipping' : '']"
+      :missing="props.missing">
       <BinderPage :cards="leftCardsNext" class="left-page-back" />
     </div>
 
-    <div v-if="props.page > 0" class="backpage left" :missing="props.missing">
-      <BinderPage :cards="(props.animation && props.direction == 'first') ? leftCardsFirst : leftCardsPrev" class="right-page-back" />
+    <div v-if="!isMobile && props.page > 0" class="backpage left" :missing="props.missing">
+      <BinderPage :cards="(props.animation && props.direction == 'first') ? leftCardsFirst : leftCardsPrev"
+        class="right-page-back" />
     </div>
-    <div class="backpage right" :missing="props.missing">
+    <div v-if="!isMobile" class="backpage right" :missing="props.missing">
       <BinderPage :cards="rightCardsNext" class="right-page-back" />
     </div>
 
@@ -36,6 +45,15 @@ const props = defineProps(['page', 'animation', 'direction', 'fill', 'missing'])
 const cardsStore = useCardsStore()
 const binderStore = useBinderStore()
 const pageDimension = ref(9)
+//const pageOffset = ref(0)
+
+const isMobile = computed(() => {
+  return window.innerWidth < 1200
+})
+
+const mobilePageCards = computed(() => {
+  return filteredCards.value.slice(pie(0), pie(1))
+})
 
 const filteredCards = computed(() => {
   if (cardsStore.cards.length) {
@@ -43,29 +61,39 @@ const filteredCards = computed(() => {
   } else return []
 })
 
+function pie(p) {
+  return (props.page + p) * pageDimension.value //+ pageOffset.value
+}
+
+
 const leftCards = computed(() => {
-  return filteredCards.value.slice(props.page * pageDimension.value, (props.page + 1) * pageDimension.value)
+  return filteredCards.value.slice(pie(0), pie(1))
 })
 
 const rightCards = computed(() => {
-  return filteredCards.value.slice((props.page + 1) * pageDimension.value, (props.page + 2) * pageDimension.value)
+  return filteredCards.value.slice(pie(1), pie(2))
 })
 
+
+
 const leftCardsNext = computed(() => {
-  return filteredCards.value.slice((props.page + 2) * pageDimension.value, (props.page + 3) * pageDimension.value)
+  return filteredCards.value.slice(pie(2), pie(3))
 })
 
 const rightCardsNext = computed(() => {
-  return filteredCards.value.slice((props.page + 3) * pageDimension.value, (props.page + 4) * pageDimension.value)
+  return filteredCards.value.slice(pie(3), pie(4))
 })
 
+
+
 const leftCardsPrev = computed(() => {
-  return filteredCards.value.slice((props.page - 2) * pageDimension.value, (props.page - 1) * pageDimension.value)
+  return filteredCards.value.slice(pie(-1), pie(-1))
 })
 
 const rightCardsPrev = computed(() => {
-  return filteredCards.value.slice((props.page - 1) * pageDimension.value, props.page * pageDimension.value)
+  return filteredCards.value.slice(pie(-1), pie(0))
 })
+
 
 
 const leftCardsFirst = computed(() => {
@@ -85,17 +113,35 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
 
 .binder-wrapper {
   position: relative;
-  margin: 5rem 5rem 0 0;
+  margin: 0;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+
+@media (min-width: 1200px) {
+  .binder-wrapper {
+    position: relative;
+    margin: 5rem 5rem 0 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 }
 
 /* main current binder */
 .binder {
   display: flex;
   flex-direction: row;
-  width: $binderwidth;
+  width: calc((3 * $cardwm) + (4 * .75rem));
+  margin: .75rem auto;
+}
+
+@media (min-width: 1200px) {
+  .binder {
+    margin: 0;
+    width: $binderwidth;
+  }
 }
 
 /* main pages animation */
