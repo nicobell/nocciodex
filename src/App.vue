@@ -199,23 +199,26 @@ const swipePage = async (dir) => {
   flipping.value = true
   flipDirection.value = dir
 
+  const factor = isMobile.value ? 1 : 2;
+  const timer = isMobile.value ? 0 : 1000;
+
   setTimeout(() => {
     flipping.value = false
     flipDirection.value = ''
 
     switch (dir) {
       case 'left':
-        page.value -= (isMobile ? 1 : 2);
+        page.value -= factor;
         break;
       case 'right':
-        page.value += (isMobile ? 1 : 2);
+        page.value += factor;
         break;
       case 'first':
         page.value = 0;
         break;
     }
     //document.querySelectorAll('.fixed').forEach(el => el.classList.remove('fixed'))
-  }, isMobile ? 0 : 1000);
+  }, timer);
 }
 
 const disableNext = computed(() => {
@@ -226,7 +229,7 @@ const disableNext = computed(() => {
       .filter(el => !fill.value || el.url)
       .length
 
-    if(!isMobile)
+    if(!isMobile.value)
       return l < 18 * (page.value / 2 + 1)
     else
       return l < 9 * (page.value + 1)

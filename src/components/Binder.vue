@@ -1,17 +1,15 @@
 <template>
   <div :class="['binder-wrapper', isMobile ? 'mobile' : '']">
 
-
+    <div v-if="isMobile" :class="['binder', isMobile ? 'mobile' : '']">
+      <BinderPage :cards="mobilePageCards" :missing="props.missing" />
+    </div>
 
     <div v-if="!isMobile" class="binder">
       <BinderPage :cards="leftCards" :missing="props.missing"
         :class="['left-page', (props.animation && (props.direction == 'left' || props.direction == 'first')) ? 'flipping' : '']" />
       <BinderPage :cards="rightCards" :missing="props.missing"
         :class="['right-page', (props.animation && props.direction == 'right') ? 'flipping' : '']" />
-    </div>
-
-    <div v-if="isMobile" :class="['binder', isMobile ? 'mobile' : '']">
-      <BinderPage :cards="mobilePageCards" :missing="props.missing" />
     </div>
 
     <div v-if="!isMobile && props.page > 0" :missing="props.missing"
