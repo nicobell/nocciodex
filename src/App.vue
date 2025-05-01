@@ -2,12 +2,7 @@
   <div class="wrapper">
     <Binder :missing="seeMissing" :fill="fill" :page="page" :animation="flipping" :direction="flipDirection" />
 
-    <div class="buttons">
-      <button :disabled="page <= 0 || flipping" @click="swipePage('first')">&lt;&lt;</button>
-      <button :disabled="page <= 0 || flipping" @click="swipePage('left')">&lt;</button>
-      <div><span style="color: #fff;">Pag {{ parseInt(page) + 1 }}</span></div>
-      <button :disabled="disableNext || flipping" @click="swipePage('right')">&gt;</button>
-    </div>
+    <Navigation :page="page" :flipping="flipping" @swipe-page="swipePage" :disableNext="disableNext" />
 
     <div class="options">
 
@@ -47,7 +42,8 @@
         </div>
       </div>
 
-      <CardLoader @add-card="addCard" />
+      <CardLoader />
+      <CardEditor />
 
     </div>
 
@@ -65,6 +61,8 @@ import Binder from './components/Binder.vue'
 import { useCardsStore } from './stores/cards'
 import CardLoader from './components/CardLoader.vue'
 import { useStore } from './stores/data'
+import Navigation from './components/Navigation.vue'
+import CardEditor from './components/CardEditor.vue'
 
 const userStore = useUserStore()
 const binderStore = useBinderStore()

@@ -22,10 +22,16 @@
 	grid-area: main;
 }
 
-.buttons {
-	grid-area: bottom;
-}
-
 .options {
 	grid-area: side;
+}
+
+.buttons {
+	grid-area: pages;
+}
+
+@media (min-width: 1024px) {
+	.buttons {
+		grid-area: bottom;
+	}
 }

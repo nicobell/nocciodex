@@ -60,7 +60,7 @@ export const useCardsStore = defineStore("cards", () => {
     }
   }
 
-	/* const deleteCard = async (c) => {
+	const deleteCard = async (c) => {
     //console.log(c)
     try {
       const { data, error } = await supabase
@@ -76,7 +76,7 @@ export const useCardsStore = defineStore("cards", () => {
     } catch (error) {
       //console.log(error)
     }
-  } */
+  }
 
-	return { cards, fetchCards, refreshCards };
+	return { cards, fetchCards, refreshCards, deleteCard };
 });

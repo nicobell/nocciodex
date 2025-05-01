@@ -1,7 +1,7 @@
 <template>
 
 
-  <div :class="{ 'interface': true, 'open': props.isOpen, 'pulse': pulse }">
+  <div :class="['interface', { 'close': !isOpen }]">
 
     <div>Edit selected Card</div>
 
@@ -40,40 +40,52 @@
 
     <div class="label">Pokedex number <span>{{ pokemonNumber }}</span></div>
 
-    <div class="checkbox">  
+    <div class="checkbox">
       <input type="checkbox" name="gotit" id="gotit" v-model="gotcard">
       <label for="gotit">Already have</label>
     </div>
 
     <button class="formbutton add" @click="editCard">Edit card</button>
-    <button class="formbutton cancel" @click="emit('close-editor')">Cancel</button>
+    <button class="formbutton cancel" @click="closeEditor">Cancel</button>
   </div>
 
 </template>
 
 <script setup>
 import { supabase } from '@/lib/supabaseClient';
+import { useCardsStore } from '@/stores/cards';
 import { useStore } from '@/stores/data';
 import { computed, onMounted, ref, watch } from 'vue';
 
-const props = defineProps(['isOpen'])
-const openWatcher = computed(() => { return props.isOpen })
 const store = useStore()
+const cardsStore = useCardsStore()
 
-const isMobile = computed(() => window.innerWidth < 1024)
+// gestione apertura e chiusura form
+const isOpen = ref(false)
 
+function closeEditor() {
+  isOpen.value = false
+  resetValues()
+}
+
+// campi form di input
 const maincard = ref('')
 const altcard = ref('')
-const gotcard = ref(false) 
+const pokemonName = ref('')
+const pokemonNumber = ref(null)
+const gotcard = ref(false)
 
-const emit = defineEmits(['edit-card', 'close-editor'])
+function resetValues() {
+  maincard.value = ''
+  altcard.value = ''
+  pokemonName.value = ''
+  pokemonNumber.value = null
+  gotcard.value = false
+}
 
-// Campo di input con v-model
-const pokemonName = ref('');
-const pokemonNumber = ref(null);
+// suggerimenti autocompletamento
 const showSuggestions = ref(false);
 
-// Suggerimenti filtrati
 const filteredPokemons = computed(() => {
   if (!pokemonName.value) return [];
   return store.pokemons.filter(p =>
@@ -81,23 +93,19 @@ const filteredPokemons = computed(() => {
   );
 });
 
-// Gestione della selezione
-const selectPokemon = (pokemon) => {
+function selectPokemon(pokemon) {
   pokemonName.value = pokemon.name;
   pokemonNumber.value = pokemon.pokedex_number;
-  showSuggestions.value = false; // Nascondi i suggerimenti
+  showSuggestions.value = false;
 };
 
-// Mostra/nascondi suggerimenti
-const toggleSuggestions = (state) => {
+function toggleSuggestions(state) {
   showSuggestions.value = state;
 };
 
+//submit handler
 const editCard = async () => {
   try {
-
-    console.log(gotcard.value)
-
     const { data, error } = await supabase
       .from('cards')
       .update({ url: maincard.value, alturl: altcard.value, pokemon: pokemonNumber.value, gotit: gotcard.value })
@@ -105,62 +113,48 @@ const editCard = async () => {
       .select();
 
     if (error) throw error
+
+    cardsStore.refreshCards()
+    closeEditor()
+
   } catch (error) {
-    //console.log(error)
+    console.log(error)
   }
-
-  emit('edit-card')
-
-  maincard.value = ''
-  altcard.value = ''
-  pokemonName.value = ''
-  pokemonNumber.value = null
 }
 
+// popola campi carta da editare alla selezione
 const currentCard = computed(() => store.editingCard)
 
-watch(openWatcher, async (newvalue, oldvalue) => {
-  if (newvalue) {
-    maincard.value = store.editingCard.url
-    altcard.value = store.editingCard.alturl
-    gotcard.value = store.editingCard.gotit
-    if (store.editingCard.pokemon)
-      selectPokemon(store.pokemons.find(p => p.pokedex_number == store.editingCard.pokemon))
-  } else {
-    maincard.value = ''
-    altcard.value = ''
-    pokemonName.value = ''
-    pokemonNumber.value = null
-    gotcard.value = false
-  }
-})
-
-const pulse = ref(false)
-
 watch(currentCard, async (newvalue, oldvalue) => {
-  if (oldvalue && newvalue) {
-    pulse.value = true;
-    setTimeout(() => {
-      pulse.value = false;
-    }, 500);
-  }
+  resetValues()
 
   if (newvalue) {
+    isOpen.value = true
     maincard.value = store.editingCard.url
     altcard.value = store.editingCard.alturl
     gotcard.value = store.editingCard.gotit
     if (store.editingCard.pokemon)
       selectPokemon(store.pokemons.find(p => p.pokedex_number == store.editingCard.pokemon))
-  } else {
-    maincard.value = ''
-    altcard.value = ''
-    pokemonName.value = ''
-    pokemonNumber.value = null
-    gotcard.value = false
   }
 })
 
 </script>
 
 <style scoped lang="scss">
+.interface {
+  max-height: 500px;
+  background-color: $primary;
+  transition: all ease 300ms;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.interface.close {
+  max-height: 0;
+  padding: 0 1rem;
+  overflow: hidden;
+  transition: all ease 300ms;
+}
 </style>

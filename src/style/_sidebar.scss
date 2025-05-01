@@ -1,3 +1,5 @@
+@use "./variables";
+
 .options {
 	color: white;
 	display: flex;
@@ -11,12 +13,33 @@
 	.field {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.25rem;
 	}
 
 	.checkbox {
 		display: flex;
 		gap: 0.5rem;
+	}
+
+	.radio {
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.radios {
+		display: flex;
+		gap: .5rem;
+	}
+
+	button {
+		border: none;
+		background: variables.$accent;
+		border-radius: 0;
+		padding: .25rem;
+		cursor: pointer;
+		&:hover {
+			opacity: .7;
+		}
 	}
 }
 
@@ -25,7 +48,6 @@
 		gap: 2rem;
 		padding: 5vw 2.5vw;
 		margin: 0;
-		overflow: unset;
 		height: unset;
 	}
 }
