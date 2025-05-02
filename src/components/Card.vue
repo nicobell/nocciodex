@@ -12,13 +12,18 @@
 
     <div v-if="props.card.alturl" class="altlabel">click for {{ mainPriority ? 'alt' : 'main' }}</div>
   </div>
-  <div v-else class="empty"></div>
+  <div v-else class="empty">
+    <div class="card-buttons">
+      <button class="edit" @click="editCard">edit</button>
+      <button class="delete" @click="deleteCard(props.card)">delete</button>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { useCardsStore } from '@/stores/cards';
 import { useStore } from '@/stores/data';
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps(['card', 'missing'])
 const store = useStore()
@@ -37,6 +42,11 @@ async function deleteCard(card) {
   await cardsStore.deleteCard(card)
   cardsStore.refreshCards()
 }
+
+const cardWatcher = computed(() => props.card)
+watch(cardWatcher, () => {
+  mainPriority.value = true
+})
 </script>
 
 <style scoped lang="scss">
@@ -84,8 +94,8 @@ async function deleteCard(card) {
 }
 
 .empty {
-  border-right: 1px solid #666;
-  border-bottom: 1px solid #666;
+  border-right: 1px dashed #666;
+  border-bottom: 1px dashed #666;
   border-radius: 0;
 }
 
@@ -136,6 +146,7 @@ async function deleteCard(card) {
   cursor: default;
 }
 
+.empty:hover,
 .card:hover {
   .card-buttons {
     display: flex;
