@@ -113,7 +113,7 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
 @media (min-width: 1200px) {
   .binder-wrapper {
     position: relative;
-    margin: 4vw 4vw 0 0;
+    margin: 3vw 5vw 0 0;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;

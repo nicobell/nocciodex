@@ -1,52 +1,52 @@
 <template>
 
-
   <div :class="['interface', { 'close': !isOpen }]">
+    <div class="inside-interface">
+      <div>Edit selected Card</div>
 
-    <div>Edit selected Card</div>
+      <!-- <div class="radios">
+          <div class="radio">
+            <input id="card" type="radio" v-model="type" value="card">
+            <label for="card">Card</label>
+          </div>
+          <div class="radio">
+            <input id="empty" type="radio" v-model="type" value="empty">
+            <label for="empty">Empty slot</label>
+          </div>
+        </div> -->
 
-    <!-- <div class="radios">
-        <div class="radio">
-          <input id="card" type="radio" v-model="type" value="card">
-          <label for="card">Card</label>
-        </div>
-        <div class="radio">
-          <input id="empty" type="radio" v-model="type" value="empty">
-          <label for="empty">Empty slot</label>
-        </div>
-      </div> -->
+      <div class="field">
+        <label for="mainimage">Main card</label>
+        <input type="text" id="mainimage" v-model="maincard">
+      </div>
 
-    <div class="field">
-      <label for="mainimage">Main card</label>
-      <input type="text" id="mainimage" v-model="maincard">
+      <div class="field">
+        <label for="altimage">Alternative card</label>
+        <input type="text" id="altimage" v-model="altcard">
+      </div>
+
+      <div class="autocomplete field">
+        <label for="pokemon">Selected pokemon</label>
+        <input id="pokemon" type="text" v-model="pokemonName" @focus="toggleSuggestions(true)"
+          @blur="toggleSuggestions(false)" @input="toggleSuggestions(true)" placeholder="Cerca Pokémon..." />
+        <ul v-if="showSuggestions && filteredPokemons.length" class="suggestions">
+          <li v-for="pokemon in filteredPokemons" :key="pokemon.pokedex_number"
+            @mousedown.prevent="selectPokemon(pokemon)">
+            {{ pokemon.name }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="label">Pokedex number <span>{{ pokemonNumber }}</span></div>
+
+      <div class="checkbox">
+        <input type="checkbox" name="gotit" id="gotit" v-model="gotcard">
+        <label for="gotit">Already have</label>
+      </div>
+
+      <button class="formbutton add" @click="editCard">Edit card</button>
+      <button class="formbutton cancel" @click="closeEditor">Cancel</button>
     </div>
-
-    <div class="field">
-      <label for="altimage">Alternative card</label>
-      <input type="text" id="altimage" v-model="altcard">
-    </div>
-
-    <div class="autocomplete field">
-      <label for="pokemon">Selected pokemon</label>
-      <input id="pokemon" type="text" v-model="pokemonName" @focus="toggleSuggestions(true)"
-        @blur="toggleSuggestions(false)" @input="toggleSuggestions(true)" placeholder="Cerca Pokémon..." />
-      <ul v-if="showSuggestions && filteredPokemons.length" class="suggestions">
-        <li v-for="pokemon in filteredPokemons" :key="pokemon.pokedex_number"
-          @mousedown.prevent="selectPokemon(pokemon)">
-          {{ pokemon.name }}
-        </li>
-      </ul>
-    </div>
-
-    <div class="label">Pokedex number <span>{{ pokemonNumber }}</span></div>
-
-    <div class="checkbox">
-      <input type="checkbox" name="gotit" id="gotit" v-model="gotcard">
-      <label for="gotit">Already have</label>
-    </div>
-
-    <button class="formbutton add" @click="editCard">Edit card</button>
-    <button class="formbutton cancel" @click="closeEditor">Cancel</button>
   </div>
 
 </template>
@@ -142,13 +142,35 @@ watch(currentCard, async (newvalue, oldvalue) => {
 
 <style scoped lang="scss">
 .interface {
-  max-height: 500px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(10px);
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inside-interface {
+  max-height: 80svh;
+  width: 90vw;
   background-color: $primary;
   transition: all ease 300ms;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 1.5em;
+}
+
+@media(min-width: 1200px) {
+  .inside-interface {
+    width: 50vw;
+    padding: 4rem;
+  }
 }
 
 .interface.close {

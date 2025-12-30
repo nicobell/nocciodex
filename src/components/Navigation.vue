@@ -51,7 +51,8 @@ function swipePage(side) {
 
 .buttons {
   grid-area: pages;
-  margin: auto 0 0 0;
+  //margin: auto 0 0 0;
+  margin: auto;
   gap: .5rem;
   display: flex;
   justify-content: center;

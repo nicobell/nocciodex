@@ -4,57 +4,58 @@
       add card
     </button>
 
-    <div :class="['interface', { 'close': !isOpen }]">
-
-      <div class="field">
-        <div class="label">
-          Type
-        </div>
-        <div class="radios">
-          <div :class="['radio', { 'active': type == 'card' }]">
-            <input id="card" type="radio" v-model="type" value="card">
-            <label for="card">Card</label>
+    <div :class="['interface', { 'close': !store.isOpen }]">
+      <div class="inside-interface">
+        <div class="field">
+          <div class="label">
+            Type
           </div>
-          <div :class="['radio', { 'active': disableField }]">
-            <input id="empty" type="radio" v-model="type" value="empty">
-            <label for="empty">Empty slot</label>
+          <div class="radios">
+            <div :class="['radio', { 'active': type == 'card' }]">
+              <input id="card" type="radio" v-model="type" value="card">
+              <label for="card">Card</label>
+            </div>
+            <div :class="['radio', { 'active': disableField }]">
+              <input id="empty" type="radio" v-model="type" value="empty">
+              <label for="empty">Empty slot</label>
+            </div>
           </div>
         </div>
+
+        <div class="field">
+          <label :class="[{ 'disabled': disableField }]" for="mainimage">Main card</label>
+          <input :disabled="disableField" type="text" id="mainimage" v-model="maincard">
+        </div>
+
+        <div class="field">
+          <label :class="[{ 'disabled': disableField }]" for="altimage">Alternative card</label>
+          <input :disabled="disableField" type="text" id="altimage" v-model="altcard">
+        </div>
+
+        <div class="autocomplete field">
+          <label :class="[{ 'disabled': disableField }]" for="pokemon">Selected pokemon</label>
+          <input :disabled="disableField" id="pokemon" type="text" v-model="pokemonName" @focus="toggleSuggestions(true)"
+            @blur="toggleSuggestions(false)" @input="toggleSuggestions(true)" placeholder="Cerca Pokémon..." />
+
+          <ul v-if="showSuggestions && filteredPokemons.length" class="suggestions">
+            <li v-for="pokemon in filteredPokemons" :key="pokemon.pokedex_number"
+              @mousedown.prevent="selectPokemon(pokemon)">
+              {{ pokemon.name }}
+            </li>
+          </ul>
+        </div>
+
+        <div :class="{ 'disabled': disableField, 'label': true }">Pokedex number <span>{{ pokemonNumber }}</span></div>
+
+        <div class="checkbox">
+          <input type="checkbox" name="gotit" id="gotit" v-model="gotcard">
+          <label for="gotit">Already have</label>
+        </div>
+
+        <button :class="[{ 'disabled': type == 'card' && !maincard }]" @click="addCard"
+          :disabled="type == 'card' && !maincard">Add card</button>
+        <button class="formbutton cancel" @click="closeLoader">Cancel</button>
       </div>
-
-      <div class="field">
-        <label :class="[{ 'disabled': disableField }]" for="mainimage">Main card</label>
-        <input :disabled="disableField" type="text" id="mainimage" v-model="maincard">
-      </div>
-
-      <div class="field">
-        <label :class="[{ 'disabled': disableField }]" for="altimage">Alternative card</label>
-        <input :disabled="disableField" type="text" id="altimage" v-model="altcard">
-      </div>
-
-      <div class="autocomplete field">
-        <label :class="[{ 'disabled': disableField }]" for="pokemon">Selected pokemon</label>
-        <input :disabled="disableField" id="pokemon" type="text" v-model="pokemonName" @focus="toggleSuggestions(true)"
-          @blur="toggleSuggestions(false)" @input="toggleSuggestions(true)" placeholder="Cerca Pokémon..." />
-
-        <ul v-if="showSuggestions && filteredPokemons.length" class="suggestions">
-          <li v-for="pokemon in filteredPokemons" :key="pokemon.pokedex_number"
-            @mousedown.prevent="selectPokemon(pokemon)">
-            {{ pokemon.name }}
-          </li>
-        </ul>
-      </div>
-
-      <div :class="{ 'disabled': disableField, 'label': true }">Pokedex number <span>{{ pokemonNumber }}</span></div>
-
-      <div class="checkbox">
-        <input type="checkbox" name="gotit" id="gotit" v-model="gotcard">
-        <label for="gotit">Already have</label>
-      </div>
-
-      <button :class="[{ 'disabled': type == 'card' && !maincard }]" @click="addCard"
-        :disabled="type == 'card' && !maincard">Add card</button>
-      <button class="formbutton cancel" @click="closeLoader">Cancel</button>
     </div>
   </div>
 </template>
@@ -73,14 +74,16 @@ const binderStore = useBinderStore()
 const emit = defineEmits(['add-card', 'toggle-loader', 'close-loader'])
 
 // gestione apertura e chiusura form
-const isOpen = ref(false)
+//const isOpen = ref(false)
 
 function toggleLoader() {
-  isOpen.value = !isOpen.value
+  //isOpen.value = !isOpen.value
+  store.setOpen(true)
 }
 
 function closeLoader() {
-  isOpen.value = false
+  //isOpen.value = false
+  store.setOpen(false)
   resetValues()
 }
 
@@ -98,6 +101,8 @@ function resetValues() {
   pokemonName.value = ''
   pokemonNumber.value = null
   gotcard.value = false
+
+  store.setPosition(null)
 }
 
 // suggerimenti autocompletamento
@@ -138,10 +143,14 @@ async function addCard(newCardOrder = null) {
   let insertOrder = binderStore.lastBinderOrder + 1
   /* if (newCardOrder.value) {
     insertOrder = newCardOrder.value
-  }
+  } */
 
-  if (newCardOrder.value) {
-    console.log('update all cards from binder ' + binderStore.currentBinder + ' from position ' + insertOrder)
+  if(store.position)
+    insertOrder = store.position
+
+  //if (newCardOrder.value) {
+  if(store.position) {
+    //console.log('update all cards from binder ' + binderStore.currentBinder + ' from position ' + insertOrder)
     try {
       const { data, error } = await supabase
         .rpc('increment_order', {
@@ -153,7 +162,7 @@ async function addCard(newCardOrder = null) {
     } catch (error) {
       console.log(error)
     }
-  } */
+  }
 
   if (card.type == 'card') {
     //console.log('add card', insertOrder)
@@ -188,8 +197,12 @@ async function addCard(newCardOrder = null) {
   }
 
   //newCardOrder.value = null
+  if(store.position)
+    closeLoader()
+  else 
+    resetValues()
+
   cardsStore.refreshCards()
-  resetValues()
 }
 
 
@@ -197,13 +210,41 @@ async function addCard(newCardOrder = null) {
 
 <style scoped lang="scss">
 .interface {
-  max-height: 500px;
-  background-color: $primary;
-  transition: all ease 300ms;
-  padding: 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(10px);
+  width: 100%;
+  height: 100%;
+  z-index: 100;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.inside-interface {
+  max-height: 80svh;
+  width: 90vw;
+  padding: 1rem;
+  background-color: $primary;
+  transition: all ease 300ms;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 100;
+}
+
+@media(min-width: 1200px) {
+  .inside-interface {
+    width: 50vw;
+    padding: 4rem;
+  }
 }
 
 .interface.close {

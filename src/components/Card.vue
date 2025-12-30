@@ -5,10 +5,24 @@
     <img v-if="props.card.alturl" :class="['alt', { 'over': !mainPriority }]" :src="props.card.alturl"
       :alt="'pokemon_alt_' + props.card.pokemon">
 
-    <div class="card-buttons">
+    <div class="card-buttons"> <!-- v-if="!isMobile" -->
       <button class="edit" @click="editCard">edit</button>
       <button class="delete" @click="deleteCard(props.card)">delete</button>
+      <button class="addleft" @click="addInPosition(props.card.order)">+</button>
+      <button class="addright" @click="addInPosition(props.card.order + 1)">+</button>
     </div>
+
+   <!--  <div class="card-buttons" v-else>
+      <template v-if="!toggleButtonsMobile">
+        <button class="edit" @click="showButtons">show buttons</button>
+      </template>
+      <template v-else>
+        <button class="edit" @click="editCard">edit</button>
+        <button class="delete" @click="deleteCard(props.card)">delete</button>
+        <button class="addleft" @click="addInPosition(props.card.order)">+</button>
+        <button class="addright" @click="addInPosition(props.card.order + 1)">+</button>
+      </template>
+    </div> -->
 
     <div v-if="props.card.alturl" class="altlabel">click for {{ mainPriority ? 'alt' : 'main' }}</div>
   </div>
@@ -16,6 +30,8 @@
     <div class="card-buttons">
       <button class="edit" @click="editCard">edit</button>
       <button class="delete" @click="deleteCard(props.card)">delete</button>
+      <button class="addleft" @click="addInPosition(props.card.order)">+</button>
+      <button class="addright" @click="addInPosition(props.card.order)">+</button>
     </div>
   </div>
 </template>
@@ -29,6 +45,15 @@ const props = defineProps(['card', 'missing'])
 const store = useStore()
 const cardsStore = useCardsStore()
 const mainPriority = ref(true)
+/* const toggleButtonsMobile = ref(false)
+
+function showButtons() {
+  toggleButtonsMobile.value = true
+}
+
+const isMobile = computed(() => {
+  return window.innerWidth < 1200
+}) */
 
 function togglePriority() {
   mainPriority.value = !mainPriority.value
@@ -47,6 +72,11 @@ const cardWatcher = computed(() => props.card)
 watch(cardWatcher, () => {
   mainPriority.value = true
 })
+
+function addInPosition(position) {
+  store.setOpen(true);
+  store.setPosition(position);
+}
 </script>
 
 <style scoped lang="scss">
@@ -83,7 +113,6 @@ watch(cardWatcher, () => {
 }
 
 @media (min-width: 1200px) {
-
   .card,
   .empty {
     width: $cardw;
@@ -99,7 +128,6 @@ watch(cardWatcher, () => {
   border-radius: 0;
 }
 
-
 .card-buttons {
   display: none;
   position: absolute;
@@ -109,12 +137,15 @@ watch(cardWatcher, () => {
   margin: .5rem;
   flex-direction: column;
   gap: .25rem;
+  height: calc(100% - 1rem);
+  width: calc(100% - 1rem);
 
   button {
     border-radius: 0;
     background: white;
     border: none;
     padding: .25rem;
+    max-width: 50%;
 
     &:hover {
       color: white;
@@ -126,6 +157,24 @@ watch(cardWatcher, () => {
       &.delete {
         background: $secondary;
       }
+      &.addleft,
+      &.addright {
+        background: $accent;
+      }
+    }
+
+    &.addleft,
+    &.addright {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      translate: 0 -50%;
+      font-size: 1.5rem;
+
+    }
+    &.addright {
+      left: unset;
+      right: 0;
     }
   }
 }

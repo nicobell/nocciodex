@@ -8,7 +8,10 @@
 	padding: 0;
 	margin: 0.75rem;
 	height: calc(40svh - 3rem);
-	overflow: scroll;
+	
+	overflow-y: scroll;
+	scrollbar-width: thin;
+	scrollbar-color: variables.$lightgray transparent;
 
 	.field {
 		display: flex;
