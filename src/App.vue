@@ -7,7 +7,7 @@
     <div class="options">
 
       <div v-if="userStore.currentId">Logged in as <span class="username">{{ userStore.currentUser }}</span></div>
-
+      
       <div v-else class="field">
         <label for="user">User</label>
         <input type="text" v-model="user" name="user">
