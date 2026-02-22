@@ -6,13 +6,13 @@
 
     <div class="options">
 
-      <div class="field">
+      <div v-if="userStore.currentId">Logged in as <span class="username">{{ userStore.currentUser }}</span></div>
+
+      <div v-else class="field">
         <label for="user">User</label>
         <input type="text" v-model="user" name="user">
         <button @click="loadUser">login</button>
       </div>
-
-      <div v-if="userStore.currentId">Logged in as <span class="username">{{ userStore.currentUser }}</span></div>
 
       <div class="field">
         <label for="generation">Binder</label>
@@ -52,7 +52,12 @@
       <CardLoader />
       <CardEditor />
 
+      
+
+      
+
     </div>
+    
 
     <!-- <a href="https://github.com/nicobell" target="_blank" class="firma">github.com/nicobell</a> -->
 
