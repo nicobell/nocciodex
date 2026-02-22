@@ -117,8 +117,10 @@ function addInPosition(position) {
   &.missing img {
     filter: grayscale(1);
   }
+}
 
-  &.nopoke {
+.more {
+  .card.nopoke {
     border: 4px solid $secondary;
   }
 }
