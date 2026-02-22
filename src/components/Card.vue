@@ -119,7 +119,7 @@ function addInPosition(position) {
   }
 }
 
-.more {
+.page:not(.more) {
   .card.nopoke {
     border: 4px solid $secondary;
   }
