@@ -93,7 +93,7 @@ function addInPosition(position) {
   width: fit-content;
   max-width: 160px;
   height: calc($cardwm * 88 / 63.5);
-  max-height: 20svh;
+  max-height: 24svh;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
