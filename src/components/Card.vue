@@ -61,6 +61,8 @@ function togglePriority() {
 
 function editCard() {
   store.setEditing(props.card)
+  store.setEditor(true)
+  
 }
 
 async function deleteCard(card) {
@@ -115,8 +117,8 @@ function addInPosition(position) {
 @media (min-width: 1200px) {
   .card,
   .empty {
-    width: $cardw;
-    height: calc($cardw * 88 / 63.5);
+    width: calc($cardh * 63.5 / 88); //$cardw;
+    height: $cardh; //calc($cardw * 88 / 63.5);
     max-height: unset;
     max-width: unset;
   }

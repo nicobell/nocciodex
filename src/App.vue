@@ -21,12 +21,12 @@
         </select>
       </div>
 
-      <div class="field">
+      <!-- <div class="field">
         <div class="checkbox">
           <input type="checkbox" v-model="fill" id="fill" name="fill">
           <label for="fill">Fill pockets</label>
         </div>
-      </div>
+      </div> -->
 
       <!-- <div class="field">
         <div class="checkbox">
@@ -47,7 +47,7 @@
 
     </div>
 
-    <a href="https://github.com/nicobell" target="_blank" class="firma">github.com/nicobell</a>
+    <!-- <a href="https://github.com/nicobell" target="_blank" class="firma">github.com/nicobell</a> -->
 
   </div>
 </template>
@@ -154,7 +154,7 @@ async function swipePage(dir) {
   flipDirection.value = dir
 
   const factor = isMobile.value ? 1 : 2;
-  const timer = isMobile.value ? 0 : 1000;
+  const timer = isMobile.value ? 0 : 500;
 
   setTimeout(() => {
     flipping.value = false

@@ -6,6 +6,7 @@ export const useStore = defineStore('data', () => {
   const pokemons = ref([])
   const editingCard = ref(null)
   const isOpen = ref(false);
+  const isOpenEditor = ref(false);
   const position = ref(null);
 
   function loadPokemons(pokes) {
@@ -24,5 +25,9 @@ export const useStore = defineStore('data', () => {
     position.value = num;
   }
 
-  return { pokemons, editingCard, isOpen, position, loadPokemons, setEditing, setOpen, setPosition }
+  function setEditor(bool) {
+    isOpenEditor.value = bool;
+  }
+
+  return { pokemons, editingCard, isOpen, isOpenEditor, position, loadPokemons, setEditing, setOpen, setPosition, setEditor }
 })

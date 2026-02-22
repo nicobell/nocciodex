@@ -100,7 +100,7 @@ const rightCardsFirst = computed(() => {
 </script>
 
 <style scoped lang="scss">
-$binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
+$binderwidth: calc((6 * ($cardh * 63.5 / 88)) + (4 * $pagepadding) + (4 * $cardsgap));
 
 .binder-wrapper {
   position: relative;
@@ -113,7 +113,7 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
 @media (min-width: 1200px) {
   .binder-wrapper {
     position: relative;
-    margin: 3vw 5vw 0 0;
+    margin: 2vh 2vh 0 0;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -124,7 +124,7 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
 .binder {
   display: flex;
   flex-direction: row;
-  margin: .75rem auto;
+  margin: 0 auto;
 }
 
 @media (min-width: 1200px) {
@@ -143,7 +143,7 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
   &.flipping {
     z-index: 4;
     animation: left-pageflip;
-    animation-duration: 950ms;
+    animation-duration: 450ms;
     animation-fill-mode: forwards;
   }
 }
@@ -157,7 +157,7 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
   &.flipping {
     z-index: 4;
     animation: right-pageflip;
-    animation-duration: 950ms;
+    animation-duration: 450ms;
     animation-fill-mode: forwards;
   }
 }
@@ -216,7 +216,7 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
     &.flipping {
       z-index: 3;
       animation: right-pageflip;
-      animation-duration: 950ms;
+      animation-duration: 450ms;
       animation-fill-mode: forwards;
     }
   }
@@ -228,7 +228,7 @@ $binderwidth: calc((6 * $cardw) + (4 * $pagepadding) + (4 * $cardsgap));
     &.flipping {
       z-index: 3;
       animation: left-pageflip;
-      animation-duration: 950ms;
+      animation-duration: 450ms;
       animation-fill-mode: forwards;
     }
   }

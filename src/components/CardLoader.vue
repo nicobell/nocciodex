@@ -48,8 +48,8 @@
         <div :class="{ 'disabled': disableField, 'label': true }">Pokedex number <span>{{ pokemonNumber }}</span></div>
 
         <div class="checkbox">
-          <input type="checkbox" name="gotit" id="gotit" v-model="gotcard">
-          <label for="gotit">Already have</label>
+          <input type="checkbox" id="gotit2" name="gotit2" v-model="gotcard">
+          <label for="gotit2">Already have</label>
         </div>
 
         <button :class="[{ 'disabled': type == 'card' && !maincard }]" @click="addCard"

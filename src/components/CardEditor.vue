@@ -1,6 +1,10 @@
 <template>
 
-  <div :class="['interface', { 'close': !isOpen }]">
+  <!-- <button class="toggler" @click="toggleEditor">
+    edit
+  </button> -->
+
+  <div :class="['interface', { 'close': !store.isOpenEditor }]">
     <div class="inside-interface">
       <div>Edit selected Card</div>
 
@@ -20,6 +24,8 @@
         <input type="text" id="mainimage" v-model="maincard">
       </div>
 
+      <button class="switcher" @click="switchLabels"><></button>
+
       <div class="field">
         <label for="altimage">Alternative card</label>
         <input type="text" id="altimage" v-model="altcard">
@@ -37,10 +43,10 @@
         </ul>
       </div>
 
-      <div class="label">Pokedex number <span>{{ pokemonNumber }}</span></div>
+      <!-- <div class="label">Pokedex number <span>{{ pokemonNumber }}</span></div> -->
 
       <div class="checkbox">
-        <input type="checkbox" name="gotit" id="gotit" v-model="gotcard">
+        <input type="checkbox" v-model="gotcard" id="gotit" name="gotit">
         <label for="gotit">Already have</label>
       </div>
 
@@ -61,10 +67,15 @@ const store = useStore()
 const cardsStore = useCardsStore()
 
 // gestione apertura e chiusura form
-const isOpen = ref(false)
+//const isOpen = ref(false)
+
+/* function toggleEditor() {
+  store.setEditor(true);
+} */
 
 function closeEditor() {
-  isOpen.value = false
+  store.setEditor(false);
+  //isOpen.value = false
   resetValues()
 }
 
@@ -108,7 +119,7 @@ const editCard = async () => {
   try {
     const { data, error } = await supabase
       .from('cards')
-      .update({ url: maincard.value, alturl: altcard.value, pokemon: pokemonNumber.value, gotit: gotcard.value })
+      .update({ url: maincard.value, alturl: altcard.value, pokemon: pokemonName.value ? pokemonNumber.value : null, gotit: gotcard.value })
       .eq('id', store.editingCard.id)
       .select();
 
@@ -122,22 +133,47 @@ const editCard = async () => {
   }
 }
 
+/* onMounted(() => {
+  maincard.value = store.editingCard?.url
+  altcard.value = store.editingCard?.alturl
+  gotcard.value = store.editingCard?.gotit
+  if (store.editingCard?.pokemon)
+    selectPokemon(store.pokemons.find(p => p.pokedex_number == store.editingCard.pokemon))
+}) */
 // popola campi carta da editare alla selezione
-const currentCard = computed(() => store.editingCard)
+/* const currentCard = computed(() => store.editingCard)
 
 watch(currentCard, async (newvalue, oldvalue) => {
-  resetValues()
+  //resetValues()
 
   if (newvalue) {
-    isOpen.value = true
+    //isOpen.value = true
+    //store.setEditor(true)
     maincard.value = store.editingCard.url
     altcard.value = store.editingCard.alturl
     gotcard.value = store.editingCard.gotit
     if (store.editingCard.pokemon)
       selectPokemon(store.pokemons.find(p => p.pokedex_number == store.editingCard.pokemon))
   }
+}) */
+
+watch(() => store.isOpenEditor, (newval) => {
+  if (newval) {
+    maincard.value = store.editingCard?.url
+    altcard.value = store.editingCard?.alturl
+    gotcard.value = store.editingCard?.gotit
+    if (store.editingCard?.pokemon)
+      selectPokemon(store.pokemons.find(p => p.pokedex_number == store.editingCard.pokemon))
+  }
 })
 
+
+function switchLabels() {
+  let temp = maincard.value;
+  maincard.value = altcard.value;
+  altcard.value = temp;
+  
+}
 </script>
 
 <style scoped lang="scss">
@@ -178,5 +214,14 @@ watch(currentCard, async (newvalue, oldvalue) => {
   padding: 0 1rem;
   overflow: hidden;
   transition: all ease 300ms;
+}
+
+
+
+button.switcher {
+  padding: .2rem;
+  background-color: white;
+  width: fit-content;
+  rotate: 90deg;
 }
 </style>
