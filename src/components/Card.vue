@@ -90,7 +90,7 @@ function addInPosition(position) {
 .card,
 .empty {
   aspect-ratio: calc(63.5/88);
-  width: $cardwm;
+  width: fit-content;
   max-width: 160px;
   height: calc($cardwm * 88 / 63.5);
   max-height: 20svh;
@@ -101,7 +101,7 @@ function addInPosition(position) {
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     position: absolute;
     z-index: 1;
   }
@@ -130,6 +130,10 @@ function addInPosition(position) {
     height: $cardh; //calc($cardw * 88 / 63.5);
     max-height: unset;
     max-width: unset;
+
+    img {
+      object-fit: cover;
+    }
   }
 }
 
