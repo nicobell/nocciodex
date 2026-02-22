@@ -1,33 +1,33 @@
 <template>
-  <div :class="['binder-wrapper', isMobile ? 'mobile' : '']">
+  <div :class="['binder-wrapper', isMobile || moreCols ? 'mobile' : '']">
 
-    <div v-if="isMobile" :class="['binder', isMobile ? 'mobile' : '']">
-      <BinderPage :cards="mobilePageCards" :missing="props.missing" />
+    <div v-if="isMobile || moreCols" :class="['binder', isMobile || moreCols ? 'mobile' : '']">
+      <BinderPage :cards="mobilePageCards" :missing="props.missing" :moreCols="moreCols"/>
     </div>
 
-    <div v-if="!isMobile" class="binder">
+    <div v-if="!isMobile && !moreCols" class="binder">
       <BinderPage :cards="leftCards" :missing="props.missing"
         :class="['left-page', (props.animation && (props.direction == 'left' || props.direction == 'first')) ? 'flipping' : '']" />
       <BinderPage :cards="rightCards" :missing="props.missing"
         :class="['right-page', (props.animation && props.direction == 'right') ? 'flipping' : '']" />
     </div>
 
-    <div v-if="!isMobile && props.page > 0" :missing="props.missing"
+    <div v-if="!isMobile && !moreCols && props.page > 0" :missing="props.missing"
       :class="['flip-helper', 'left', (props.animation && (props.direction == 'left' || props.direction == 'first')) ? 'flipping' : '']">
       <BinderPage :cards="(props.animation && props.direction == 'first') ? rightCardsFirst : rightCardsPrev"
         class="right-page-back" />
     </div>
-    <div v-if="!isMobile"
+    <div v-if="!isMobile && !moreCols"
       :class="['flip-helper', 'right', (props.animation && props.direction == 'right') ? 'flipping' : '']"
       :missing="props.missing">
       <BinderPage :cards="leftCardsNext" class="left-page-back" />
     </div>
 
-    <div v-if="!isMobile && props.page > 0" class="backpage left" :missing="props.missing">
+    <div v-if="!isMobile  && !moreCols && props.page > 0" class="backpage left" :missing="props.missing">
       <BinderPage :cards="(props.animation && props.direction == 'first') ? leftCardsFirst : leftCardsPrev"
         class="right-page-back" />
     </div>
-    <div v-if="!isMobile" class="backpage right" :missing="props.missing">
+    <div v-if="!isMobile  && !moreCols" class="backpage right" :missing="props.missing">
       <BinderPage :cards="rightCardsNext" class="right-page-back" />
     </div>
 
@@ -40,11 +40,13 @@ import BinderPage from './BinderPage.vue';
 import { useBinderStore } from '@/stores/binders';
 import { computed, ref } from 'vue';
 
-const props = defineProps(['page', 'animation', 'direction', 'fill', 'missing'])
+const props = defineProps(['page', 'animation', 'direction', 'fill', 'missing', 'moreCols'])
 const cardsStore = useCardsStore()
 const binderStore = useBinderStore()
-const pageDimension = ref(9)
+//const pageDimension = ref(9)
 //const pageOffset = ref(0)
+
+const pageDimension = computed(() => props.moreCols ? 12 : 9)
 
 const isMobile = computed(() => {
   return window.innerWidth < 1200
@@ -130,6 +132,10 @@ $binderwidth: calc((6 * ($cardh * 63.5 / 88)) + (4 * $pagepadding) + (4 * $cards
 @media (min-width: 1200px) {
   .binder {
     margin: 0;
+
+    &.mobile {
+      margin: 0 auto;
+    }
   }
 }
 

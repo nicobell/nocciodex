@@ -1,5 +1,10 @@
 <template>
-  <div v-if="props.card.url != ''" :class="['card', (props.missing && props.card.gotit) ? 'missing' : '']"
+  <div v-if="props.card.url != ''" :class="[
+    'card', 
+    { 'missing': props.missing && props.card.gotit },
+    { 'nopoke': !props.card.pokemon }
+  ]"
+
     @click="togglePriority">
     <img :class="[{ 'over': mainPriority }]" :src="props.card.url" :alt="'pokemon_' + props.card.pokemon">
     <img v-if="props.card.alturl" :class="['alt', { 'over': !mainPriority }]" :src="props.card.alturl"
@@ -96,7 +101,7 @@ function addInPosition(position) {
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     position: absolute;
     z-index: 1;
   }
@@ -111,6 +116,10 @@ function addInPosition(position) {
 
   &.missing img {
     filter: grayscale(1);
+  }
+
+  &.nopoke {
+    border: 4px solid $secondary;
   }
 }
 

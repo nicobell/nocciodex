@@ -1,12 +1,12 @@
 <template>
-  <div class="page">
+  <div :class="['page', { 'more': moreCols }]">
     <Card v-for="(card, i) in props.cards" :key="i + 'card'" :card="card" :missing="missing" />
   </div>
 </template>
 
 <script setup>
 import Card from './Card.vue';
-const props = defineProps(['cards', 'missing'])
+const props = defineProps(['cards', 'missing', 'moreCols'])
 </script>
 
 <style scoped lang="scss">
@@ -27,6 +27,10 @@ $pageheight: calc((3 * $cardh) + (2 * $pagepadding) + (2 * $cardsgap));//calc(($
   padding: 1vh;
   border-radius: 10px;
   background-color: #333;
+
+  &.more {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
 
   //min-height: $pageheightm;
   //min-width: $pagewidthm;

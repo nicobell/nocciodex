@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Binder :missing="seeMissing" :fill="fill" :page="page" :animation="flipping" :direction="flipDirection" />
+    <Binder :missing="seeMissing" :fill="fill" :page="page" :animation="flipping" :direction="flipDirection" :moreCols="moreCols" />
 
     <Navigation :page="page" :flipping="flipping" @swipe-page="swipePage" :disableNext="disableNext" />
 
@@ -27,6 +27,13 @@
           <label for="fill">Fill pockets</label>
         </div>
       </div> -->
+
+      <div class="field">
+        <div class="checkbox">
+          <input type="checkbox" v-model="moreCols" id="moreCols" name="moreCols">
+          <label for="moreCols">4 columns</label>
+        </div>
+      </div>
 
       <!-- <div class="field">
         <div class="checkbox">
@@ -153,8 +160,8 @@ async function swipePage(dir) {
   flipping.value = true
   flipDirection.value = dir
 
-  const factor = isMobile.value ? 1 : 2;
-  const timer = isMobile.value ? 0 : 500;
+  const factor = (isMobile.value || moreCols.value) ? 1 : 2;
+  const timer = (isMobile.value || moreCols.value) ? 0 : 500;
 
   setTimeout(() => {
     flipping.value = false
@@ -185,7 +192,7 @@ const disableNext = computed(() => {
         .filter(el => !fill.value || el.url)
         .length
 
-    if (!isMobile.value)
+    if (!isMobile.value || moreCols.value)
       return l < 18 * (page.value / 2 + 1)
     else
       return l < 9 * (page.value + 1)
@@ -195,6 +202,8 @@ const disableNext = computed(() => {
 /* -------------------------------------------- */
 const seeMissing = ref(false)
 const fill = ref(false)
+
+const moreCols = ref(false)
 
 /* -------------------------------------------- */
 const isLoaderOpen = ref(false)
